@@ -14,19 +14,24 @@ jobs:
       - name: Ping intake worker
         env:
           GH_TOKEN: ${{ github.token }}
-          NOTIFY_URL: ${{ secrets.INTAKE_NOTIFY_URL }}
+          NOTIFY_URL: https://hillside-mail-intake.github-e53.workers.dev/notify
+          NOTIFY_TOKEN: ${{ secrets.INTAKE_NOTIFY_TOKEN }}
           REPO: ${{ github.repository }}
           ISSUE: ${{ github.event.issue.number }}
           TITLE: ${{ github.event.issue.title }}
           CLOSED_AT: ${{ github.event.issue.closed_at }}
         run: |
-          # Closing comment: newest maintainer comment within 10 minutes of
-          # the close. Relayed to the client in the notification email.
+          # Closing note: newest maintainer comment starting "Note to client:"
+          # within 10 minutes of the close, relayed without the marker. Client
+          # replies posted by the intake worker also count as OWNER, so the
+          # marker is what separates a note from everything else.
           COMMENT=$(gh api "repos/$REPO/issues/$ISSUE/comments?per_page=100" --jq '
             [ .[]
               | select(.author_association == "OWNER" or .author_association == "MEMBER" or .author_association == "COLLABORATOR")
               | select((env.CLOSED_AT | fromdateiso8601) - (.created_at | fromdateiso8601) | fabs < 600)
-            ] | last | .body // ""')
+              | select(.body | test("^\\s*note to client:"; "i"))
+            ] | last | .body // "" | sub("^\\s*note to client:\\s*"; ""; "i")')
           jq -n --argjson issue "$ISSUE" --arg title "$TITLE" --arg comment "$COMMENT" \
             '{issue: $issue, title: $title, comment: $comment}' |
-            curl -sf -X POST -H 'content-type: application/json' -d @- "$NOTIFY_URL"
+            curl -sf -X POST -H 'content-type: application/json' \
+              -H "authorization: Bearer $NOTIFY_TOKEN" -d @- "$NOTIFY_URL"
