@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import FactsLine from "./FactsLine.astro";
+import { bookingEvent } from "../layouts/Base.astro";
 
 interface Props {
   dwelling: {
@@ -27,7 +28,7 @@ const { dwelling } = Astro.props;
     <ul class="amenities-line">
       {dwelling.amenities.map((a) => <li>{a}</li>)}
     </ul>
-    <a class="btn" href={dwelling.cta.href}>{dwelling.cta.label}</a>
+    <a class="btn" href={dwelling.cta.href} data-umami-event={bookingEvent(dwelling.cta.href)}>{dwelling.cta.label}</a>
   </div>
   <Image
     src={dwelling.hero.src}

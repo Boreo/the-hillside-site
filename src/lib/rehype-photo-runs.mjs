@@ -220,6 +220,14 @@ export default function rehypePhotoRuns() {
     };
     walk(tree);
 
+    const tagBookingLinks = (node) => {
+      if (isElement(node, "a") && String(node.properties.href ?? "").startsWith("/book/")) {
+        node.properties.dataUmamiEvent = "booking-click";
+      }
+      node.children?.forEach(tagBookingLinks);
+    };
+    tagBookingLinks(tree);
+
     // Upper bounds: each layout's share of main's 72rem max-width, ignoring padding and gaps.
     const SIZES = {
       "photo-run": "(max-width: 40rem) 100vw, min(36rem, 50vw)",
