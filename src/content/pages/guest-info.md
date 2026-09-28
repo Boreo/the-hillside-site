@@ -90,7 +90,7 @@ The Guest acknowledges that the use of any additional amenities including but no
 
 ### Guest’s Property
 
-All personal belongings, baggage, vehicles and other property of the Guest of any description shall be the risk of the Guest at all times and the Owner accepts any responsibility for any loss or damage thereto.
+All personal belongings, baggage, vehicles and other property of the Guest of any description shall be the risk of the Guest at all times and the Owner accepts no responsibility for any loss or damage thereto.
 
 ### Guest Numbers and Functions
 
