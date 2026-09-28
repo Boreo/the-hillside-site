@@ -1,0 +1,29 @@
+name: Mirror main to public repo
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: mirror
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # No --force, so a rewritten main fails here rather than overwriting the mirror.
+      - name: Push to Boreo/the-hillside-site
+        env:
+          MIRROR_SSH_KEY: ${{ secrets.MIRROR_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          install -m 600 /dev/null ~/.ssh/mirror_key
+          printf '%s\n' "$MIRROR_SSH_KEY" > ~/.ssh/mirror_key
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/mirror_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          git push git@github.com:Boreo/the-hillside-site.git HEAD:refs/heads/main
