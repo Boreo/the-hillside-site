@@ -6,8 +6,10 @@ on:
 
 jobs:
   notify:
-    if: contains(github.event.issue.labels.*.name, 'client-request')
+    if: contains(github.event.issue.labels.*.name, 'client-request') && github.event.issue.state_reason == 'completed'
     runs-on: ubuntu-latest
+    permissions:
+      issues: read
     steps:
       - name: Ping intake worker
         env:
