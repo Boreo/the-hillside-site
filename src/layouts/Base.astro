@@ -12,8 +12,8 @@ import type { ImageMetadata } from "astro";
 export const BOOK_URL = "/book/";
 
 /** Stable node identity for the business, referenced from per-page JSON-LD
- * (dwelling containedInPlace, review itemReviewed) so answer engines merge
- * every page's structured data into one entity. */
+ * (dwelling containedInPlace) so answer engines merge every page's
+ * structured data into one entity. */
 export const BUSINESS_ID = "https://www.thehillside.com.au/#business";
 
 interface Props {
@@ -84,17 +84,7 @@ const footerLinks = nav.flatMap((item) =>
   "children" in item && item.children ? item.children : [item],
 );
 
-// Cross-platform aggregate rating, weighted by review count and normalised
-// to a 5-point scale (Booking.com scores out of 10).
-const ratedSources = (await getCollection("reviewSources")).filter(
-  ({ data }) => data.rating !== null && data.count !== null,
-);
-const totalReviews = ratedSources.reduce((sum, { data }) => sum + data.count!, 0);
-const weightedRating =
-  ratedSources.reduce(
-    (sum, { data }) => sum + (data.rating! / data.scale) * 5 * data.count!,
-    0,
-  ) / totalReviews;
+const profileUrls = (await getCollection("reviewSources")).map(({ data }) => data.url);
 
 const heroPosterOptimized = await getImage({ src: heroPoster, width: 1200, format: "jpg" });
 
@@ -132,17 +122,11 @@ const jsonLd = {
         longitude: 153.224167,
       },
       priceRange: "AUD $260–$635 per night",
-      sameAs: ratedSources.map(({ data }) => data.url),
+      sameAs: profileUrls,
       checkinTime: "14:00",
       checkoutTime: "10:00",
       petsAllowed: false,
       smokingAllowed: false,
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: Number(weightedRating.toFixed(2)),
-        bestRating: 5,
-        reviewCount: totalReviews,
-      },
       amenityFeature: [
         { "@type": "LocationFeatureSpecification", name: "Swimming pool", value: true },
         { "@type": "LocationFeatureSpecification", name: "Heated spa", value: true },
