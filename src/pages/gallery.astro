@@ -32,7 +32,7 @@ const fulls = await Promise.all(
             alt={data.alt}
             widths={[400, 800]}
             sizes="(max-width: 40rem) 100vw, 33vw"
-            loading={i < 6 ? "eager" : "lazy"}
+            loading={i < 3 ? "eager" : "lazy"}
           />
         </a>
       ))

@@ -220,8 +220,32 @@ export default function rehypePhotoRuns() {
     };
     walk(tree);
 
+    // Upper bounds: each layout's share of main's 72rem max-width, ignoring padding and gaps.
+    const SIZES = {
+      "photo-run": "(max-width: 40rem) 100vw, min(36rem, 50vw)",
+      "media-row": "(max-width: 40rem) 100vw, min(34rem, 46vw)",
+      "cross-sell-card": "(max-width: 40rem) 100vw, min(39rem, 54vw)",
+      full: "(max-width: 72rem) 100vw, 72rem",
+    };
+    const applySizes = (parent, ctx) => {
+      const elems = (parent.children ?? []).filter((n) => n.type === "element");
+      elems.forEach((node, i) => {
+        if (isElement(node, "img")) {
+          node.properties.sizes = SIZES[ctx];
+          return;
+        }
+        const classes = node.properties?.className ?? [];
+        let next = Object.keys(SIZES).find((k) => classes.includes(k)) ?? ctx;
+        // An odd photo run's last image spans both columns (global.css).
+        const inRun = (parent.properties?.className ?? []).includes("photo-run");
+        if (inRun && elems.length % 2 === 1 && i === elems.length - 1) next = "full";
+        applySizes(node, next);
+      });
+    };
+    applySizes(tree, "full");
+
     // Wrap each photo in a button feeding the site-wide <dialog> viewer
-    // (LightboxViewer.astro), which shows the image's own rendition.
+    // (LightboxViewer.astro), which shows the widest file in its srcset.
     // Cross-sell card photos link to the card's page instead (wrapped
     // above), so the pass skips those rows.
     const enlarge = (parent) => {
@@ -251,8 +275,10 @@ export default function rehypePhotoRuns() {
     // (e.g. the hosts portrait has nothing to enlarge).
     if (file.data.astro?.frontmatter?.lightbox !== false) enlarge(tree);
 
-    // The first content image sits at or near the top of the page, so
-    // load it eagerly instead of Astro's lazy default.
+    // On content pages the first image sits at or near the top, so load it
+    // eagerly instead of Astro's lazy default. Dwelling pages open with the
+    // DwellingLayout hero, which carries the priority instead.
+    if (file.data.astro?.frontmatter?.dwelling) return;
     const firstImg = (parent) => {
       for (const node of parent.children ?? []) {
         if (isElement(node, "img")) return node;
