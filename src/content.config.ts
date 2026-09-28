@@ -121,6 +121,10 @@ const treatmentGroupSchema = cardGroupSchema(
   }),
 );
 
+// Hero videos live in the hillside-media R2 bucket, which answers byte-range
+// requests; Workers static assets do not, and iOS Safari needs them to play video.
+const videoUrl = z.string().startsWith("https://media.thehillside.com.au/videos/");
+
 const pages = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/pages" }),
   schema: (ctx) =>
@@ -130,13 +134,13 @@ const pages = defineCollection({
       dwelling: dwellingSchema(ctx).optional(),
       heroVideo: z
         .object({
-          src: z.string().startsWith("/videos/"),
-          srcAv1: z.string().startsWith("/videos/").optional(),
+          src: videoUrl,
+          srcAv1: videoUrl.optional(),
           // Higher-resolution pair served from 64rem up.
           wide: z
             .object({
-              src: z.string().startsWith("/videos/"),
-              srcAv1: z.string().startsWith("/videos/").optional(),
+              src: videoUrl,
+              srcAv1: videoUrl.optional(),
             })
             .optional(),
           poster: ctx.image(),

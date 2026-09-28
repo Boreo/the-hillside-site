@@ -30,8 +30,7 @@ src/
   pages/             Routes: index.astro, [...slug].astro, book, gallery, reviews, 404
   styles/            global.css with brand palette tokens
   content.config.ts  Content schemas
-public/              Favicons, robots.txt, _headers (staging noindex)
-  videos/            Hero drone video
+public/              Favicons, robots.txt, _headers (security headers, staging and dev noindex)
 scripts/             make-icons.mjs — regenerates favicons from the emblem
 tests/               Playwright specs
 .github/workflows/   claude.yml (agent on @claude mentions, client-request triage), deploy-dev.yml
@@ -67,6 +66,6 @@ The pipeline: the non-technical owner emails a change request → GitHub issue �
 ## Content editing
 
 - Content lives in `src/content/pages/*.md`; files map to routes by filename. Homepage copy is frontmatter in `index.md`.
-- Images go in `src/assets/images/<category>/` (`house`, `villa`, `external`, `drone`, `amenities`, `location`), named `<descriptive-name>.<ext>` and pre-resized to 2000px or less. The hero video is in `public/videos/`.
+- Images go in `src/assets/images/<category>/` (`house`, `villa`, `external`, `drone`, `amenities`, `location`), named `<descriptive-name>.<ext>` and pre-resized to 2000px or less. The hero video is served from the `hillside-media` R2 bucket at `media.thehillside.com.au`, which answers the byte-range requests iOS Safari needs.
 - Dwelling pages (House, Villa, House & Villa) carry `dwelling:` frontmatter — name, hero, sleeps, bedrooms, bathrooms, amenities, optional `cta` — which drives the facts strip and Accommodation JSON-LD.
 - Legacy Squarespace paths (`/home`, `/further-inform`) redirect via `astro.config.mjs`.
