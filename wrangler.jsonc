@@ -4,7 +4,7 @@
 	"compatibility_flags": ["global_fetch_strictly_public"],
 	"name": "the-hillside",
 	"assets": {
-		"directory": "./dist/client",
+		"directory": "./dist",
 		"not_found_handling": "404-page"
 	},
 	"observability": {
