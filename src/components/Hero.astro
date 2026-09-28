@@ -2,7 +2,12 @@
 import { BOOK_URL } from "../layouts/Base.astro";
 
 interface Props {
-  video: { src: string; srcAv1?: string; posterSrc: string };
+  video: {
+    src: string;
+    srcAv1?: string;
+    wide?: { src: string; srcAv1?: string };
+    posterSrc: string;
+  };
   line: string;
 }
 const { video, line } = Astro.props;
@@ -18,6 +23,10 @@ const { video, line } = Astro.props;
     playsinline
     aria-label="Aerial drone view over The Hillside Retreat towards the Gold Coast skyline"
   >
+    {video.wide?.srcAv1 && (
+      <source src={video.wide.srcAv1} media="(min-width: 64rem)" type='video/mp4; codecs="av01.0.08M.10"' />
+    )}
+    {video.wide && <source src={video.wide.src} media="(min-width: 64rem)" type="video/mp4" />}
     {video.srcAv1 && <source src={video.srcAv1} type='video/mp4; codecs="av01.0.05M.10"' />}
     <source src={video.src} type="video/mp4" />
   </video>

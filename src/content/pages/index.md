@@ -4,6 +4,9 @@ description: "A house and a villa on the eastern edge of Tamborine Mountain, loo
 heroVideo:
   src: /videos/hero.mp4
   srcAv1: /videos/hero.av1.mp4
+  wide:
+    src: /videos/hero-1080.mp4
+    srcAv1: /videos/hero-1080.av1.mp4
   poster: ../../assets/images/hero-poster.jpg
 homepage:
   heroLine: "A house and a villa overlooking the Gold Coast from Tamborine Mountain."
