@@ -31,7 +31,9 @@ jobs:
 
       # hillside-voice depends on the humanizer pattern list
       - name: Fetch humanizer skill
-        run: git clone --depth 1 https://github.com/blader/humanizer.git .claude/skills/humanizer
+        run: |
+          git clone -q https://github.com/blader/humanizer.git .claude/skills/humanizer
+          git -C .claude/skills/humanizer checkout -q 225a6f39ac85f76ee48dbad772ea4abe4ed6c9d8
 
       - name: Triage client request
         uses: anthropics/claude-code-action@v1
@@ -44,7 +46,7 @@ jobs:
               }
             }
           claude_args: |
-            --model claude-opus-5
+            --model claude-opus-5-5
             --allowedTools "Bash(gh issue comment:*),Bash(gh issue view:*)"
           prompt: |
             Issue #${{ github.event.issue.number }} in ${{ github.repository }} is a
@@ -64,7 +66,7 @@ jobs:
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude') && github.event.comment.user.type != 'Bot') ||
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
-      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+      (github.event_name == 'issues' && !contains(github.event.issue.labels.*.name, 'client-request') && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -80,7 +82,9 @@ jobs:
 
       # hillside-voice depends on the humanizer pattern list
       - name: Fetch humanizer skill
-        run: git clone --depth 1 https://github.com/blader/humanizer.git .claude/skills/humanizer
+        run: |
+          git clone -q https://github.com/blader/humanizer.git .claude/skills/humanizer
+          git -C .claude/skills/humanizer checkout -q 225a6f39ac85f76ee48dbad772ea4abe4ed6c9d8
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -90,6 +94,22 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # Branch protection is unavailable on this private repo's plan. The hook
+      # catches mistaken pushes to main or dev; `git push --no-verify` skips it.
+      - name: Block pushes to main and dev
+        run: |
+          cat > .git/hooks/pre-push <<'EOF'
+          #!/bin/sh
+          while read -r _ _ remote_ref _; do
+            case "$remote_ref" in
+              refs/heads/main|refs/heads/dev)
+                echo "Push to ${remote_ref#refs/heads/} blocked. Push a branch and open a PR to dev." >&2
+                exit 1 ;;
+            esac
+          done
+          EOF
+          chmod +x .git/hooks/pre-push
 
       - name: Run Claude Code
         id: claude
@@ -112,6 +132,6 @@ jobs:
             }
 
           claude_args: |
-            --model claude-opus-5
+            --model claude-opus-5-5
             --allowedTools "Bash(npm install),Bash(npm ci),Bash(npm run build),Bash(npm test),Bash(npx astro check),Bash(gh pr create:*)"
 
