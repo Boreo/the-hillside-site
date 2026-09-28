@@ -4,7 +4,7 @@ import Base from "../layouts/Base.astro";
 import PullQuote from "../components/PullQuote.astro";
 import FactIcon from "../components/FactIcon.astro";
 import { attribution } from "../lib/reviews";
-import { BOOK_URL, BUSINESS_ID } from "../layouts/Base.astro";
+import { BOOK_URL } from "../layouts/Base.astro";
 
 const reviews = await getCollection("reviews");
 // The review carrying a `featured` excerpt becomes the pull-quote and is
@@ -17,25 +17,11 @@ const sources = (await getCollection("reviewSources")).filter(
 // Long reviews span the full grid width so they don't tower over their
 // neighbour in a two-column row.
 const WIDE_THRESHOLD = 280;
-
-// Reviews attach to the sitewide LodgingBusiness node by @id so engines
-// merge them with the aggregateRating and business details from Base.
-const reviewsJsonLd = {
-  "@context": "https://schema.org",
-  "@id": BUSINESS_ID,
-  review: reviews.map(({ data }) => ({
-    "@type": "Review",
-    reviewBody: data.quote,
-    author: { "@type": "Person", name: data.author },
-    itemReviewed: { "@id": BUSINESS_ID },
-  })),
-};
 ---
 
 <Base
   title="Reviews"
   description="What guests are saying about their stays at The Hillside Retreat on Tamborine Mountain."
-  extraJsonLd={reviewsJsonLd}
 >
   <h1>Reviews</h1>
   <p class="reviews-intro">
