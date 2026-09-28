@@ -88,3 +88,54 @@ test("mobile: hamburger toggles panel closed again", async ({ page }, testInfo) 
   await expect(page.locator("header nav")).toBeHidden();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
 });
+
+test("desktop: caret button discloses the menu and Escape returns focus", async ({ page }, testInfo) => {
+  test.skip(isMobile(testInfo.project.name), "desktop only");
+  await page.goto("/");
+  const drop = page.locator(".nav-drop", { hasText: "Your Stay" });
+  const button = drop.locator(".drop-toggle");
+  const menu = drop.locator(".drop-menu");
+
+  await expect(button).toHaveAttribute("aria-expanded", "false");
+  await button.focus();
+  await page.keyboard.press("Enter");
+  await expect(button).toHaveAttribute("aria-expanded", "true");
+  await expect(menu).toBeVisible();
+  await page.keyboard.press("Tab");
+  await expect(menu.locator("a").first()).toBeFocused();
+
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+  await expect(button).toHaveAttribute("aria-expanded", "false");
+  await expect(button).toBeFocused();
+});
+
+test("desktop: Escape dismisses a hovered menu", async ({ page }, testInfo) => {
+  test.skip(isMobile(testInfo.project.name), "desktop only");
+  await page.goto("/");
+  const drop = page.locator(".nav-drop", { hasText: "Accommodation" });
+  await drop.locator(".nav-parent").hover();
+  await expect(drop.locator(".drop-menu")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(drop.locator(".drop-menu")).toBeHidden();
+});
+
+test("section parent is marked current, not the page", async ({ page }) => {
+  await page.goto("/guest-info/");
+  await expect(page.locator(".nav-parent", { hasText: "Your Stay" })).toHaveAttribute("aria-current", "true");
+});
+
+test("mobile: Tab moves from the toggle into the open menu, Escape closes it", async ({ page }, testInfo) => {
+  test.skip(!isMobile(testInfo.project.name), "mobile only");
+  await page.goto("/");
+  const toggle = page.locator(".nav-toggle");
+  await toggle.focus();
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("Tab");
+  await expect(page.locator("header nav a").first()).toBeFocused();
+
+  await page.keyboard.press("Escape");
+  await expect(page.locator("header nav")).toBeHidden();
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await expect(toggle).toBeFocused();
+});

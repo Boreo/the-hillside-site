@@ -274,11 +274,31 @@ nav a.btn:hover {
 
 .nav-drop {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.nav-parent .caret {
-  font-size: 0.7em;
+.drop-toggle {
+  display: grid;
+  place-items: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0;
+  margin-left: 0.1rem;
+  background: none;
+  border: none;
+  border-radius: 4px;
   color: var(--muted);
+  cursor: pointer;
+}
+
+.drop-toggle .caret {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+.nav-drop.open .drop-toggle .caret {
+  transform: rotate(180deg);
 }
 
 .drop-menu {
@@ -321,10 +341,10 @@ nav a.btn:hover {
   color: var(--accent-dark);
 }
 
-/* Touch devices open via the .open class (set by the header script) instead. */
+/* Keyboard and touch open via the .open class (set by the header script).
+   .dismissed hides a hovered menu after Escape until the pointer leaves. */
 @media (hover: hover) {
-  .nav-drop:hover .drop-menu,
-  .nav-drop:focus-within .drop-menu {
+  .nav-drop:hover:not(.dismissed) .drop-menu {
     display: block;
   }
 }
@@ -407,7 +427,11 @@ nav a.btn:hover {
     color: var(--accent-dark);
   }
 
-  .nav-parent .caret {
+  .nav-drop {
+    display: block;
+  }
+
+  .drop-toggle {
     display: none;
   }
 

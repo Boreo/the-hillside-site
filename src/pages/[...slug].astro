@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import { getImage } from "astro:assets";
-import Base, { BUSINESS_ID } from "../layouts/Base.astro";
+import Base, { BUSINESS_ID, bookingEvent } from "../layouts/Base.astro";
 import DwellingLayout from "../components/DwellingLayout.astro";
 import CardGroups from "../components/CardGroups.astro";
 import FactIcon from "../components/FactIcon.astro";
@@ -133,7 +133,7 @@ const extraJsonLd = [dwellingJsonLd, faqJsonLd, breadcrumbJsonLd].filter(
   {
     page.data.closingCta && (
       <p class="closing-cta">
-        <a class="btn" href={page.data.closingCta.href}>
+        <a class="btn" href={page.data.closingCta.href} data-umami-event={bookingEvent(page.data.closingCta.href)}>
           {page.data.closingCta.label}
         </a>
       </p>
