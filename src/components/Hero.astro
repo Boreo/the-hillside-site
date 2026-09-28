@@ -12,7 +12,7 @@ const { video, line } = Astro.props;
   <video
     class="hero-video"
     poster={video.posterSrc}
-    autoplay
+    preload="none"
     muted
     loop
     playsinline
@@ -25,7 +25,33 @@ const { video, line } = Astro.props;
     <h1 class="hero-line">{line}</h1>
     <a class="btn-glass" href={BOOK_URL} data-umami-event="booking-click">Check availability</a>
   </div>
+  <button class="hero-toggle" type="button" aria-label="Pause video" hidden>
+    <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zM13 5h3v14h-3z" /></svg>
+    <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+  </button>
 </section>
+
+<script>
+  // Script-started playback keeps reduced-motion and Save-Data visitors on the poster.
+  const video = document.querySelector<HTMLVideoElement>(".hero-video");
+  const toggle = document.querySelector<HTMLButtonElement>(".hero-toggle");
+  if (video && toggle) {
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const saveData =
+      (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData ?? false;
+    const sync = () => {
+      toggle.setAttribute("aria-label", video.paused ? "Play video" : "Pause video");
+      toggle.classList.toggle("is-paused", video.paused);
+    };
+    video.addEventListener("play", sync);
+    video.addEventListener("pause", sync);
+    toggle.addEventListener("click", () => (video.paused ? video.play().catch(sync) : video.pause()));
+    reduceMotion.addEventListener("change", () => reduceMotion.matches && video.pause());
+    toggle.hidden = false;
+    sync();
+    if (!reduceMotion.matches && !saveData) video.play().catch(sync);
+  }
+</script>
 
 <style>
   /* Inset video panel: rounded, page background visible around it, text overlaid on a scrim. */
@@ -62,5 +88,44 @@ const { video, line } = Astro.props;
     max-width: 30ch;
     text-wrap: balance;
     margin: 0 0 1.25rem;
+  }
+  .hero-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid rgb(250 248 244 / 0.45);
+    background: rgb(9 47 28 / 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--paper);
+    cursor: pointer;
+  }
+  .hero-toggle[hidden] {
+    display: none;
+  }
+  .hero-toggle:hover {
+    background: rgb(9 47 28 / 0.65);
+  }
+  .hero-toggle:focus-visible {
+    outline: 2px solid var(--paper);
+    outline-offset: 2px;
+  }
+  .hero-toggle svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: currentColor;
+  }
+  .hero-toggle .icon-play,
+  .hero-toggle.is-paused .icon-pause {
+    display: none;
+  }
+  .hero-toggle.is-paused .icon-play {
+    display: block;
   }
 </style>
