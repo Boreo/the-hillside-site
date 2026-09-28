@@ -132,6 +132,13 @@ const pages = defineCollection({
         .object({
           src: z.string().startsWith("/videos/"),
           srcAv1: z.string().startsWith("/videos/").optional(),
+          // Higher-resolution pair served from 64rem up.
+          wide: z
+            .object({
+              src: z.string().startsWith("/videos/"),
+              srcAv1: z.string().startsWith("/videos/").optional(),
+            })
+            .optional(),
           poster: ctx.image(),
         })
         .optional(),
