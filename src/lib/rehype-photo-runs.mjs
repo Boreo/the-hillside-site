@@ -275,8 +275,10 @@ export default function rehypePhotoRuns() {
     // (e.g. the hosts portrait has nothing to enlarge).
     if (file.data.astro?.frontmatter?.lightbox !== false) enlarge(tree);
 
-    // The first content image sits at or near the top of the page, so
-    // load it eagerly instead of Astro's lazy default.
+    // On content pages the first image sits at or near the top, so load it
+    // eagerly instead of Astro's lazy default. Dwelling pages open with the
+    // DwellingLayout hero, which carries the priority instead.
+    if (file.data.astro?.frontmatter?.dwelling) return;
     const firstImg = (parent) => {
       for (const node of parent.children ?? []) {
         if (isElement(node, "img")) return node;
