@@ -31,7 +31,9 @@ jobs:
 
       # hillside-voice depends on the humanizer pattern list
       - name: Fetch humanizer skill
-        run: git clone --depth 1 https://github.com/blader/humanizer.git .claude/skills/humanizer
+        run: |
+          git clone -q https://github.com/blader/humanizer.git .claude/skills/humanizer
+          git -C .claude/skills/humanizer checkout -q 225a6f39ac85f76ee48dbad772ea4abe4ed6c9d8
 
       - name: Triage client request
         uses: anthropics/claude-code-action@v1
@@ -80,7 +82,9 @@ jobs:
 
       # hillside-voice depends on the humanizer pattern list
       - name: Fetch humanizer skill
-        run: git clone --depth 1 https://github.com/blader/humanizer.git .claude/skills/humanizer
+        run: |
+          git clone -q https://github.com/blader/humanizer.git .claude/skills/humanizer
+          git -C .claude/skills/humanizer checkout -q 225a6f39ac85f76ee48dbad772ea4abe4ed6c9d8
 
       - name: Set up Node
         uses: actions/setup-node@v4
