@@ -2,8 +2,8 @@
 // Site-wide photo viewer: one <dialog> per page, driven by every
 // .lightbox-open on the page in document order. An anchor (gallery, place
 // cards) shows its href's full-size asset; a button (rehype-wrapped
-// markdown photos, PhotoBand) shows its thumbnail's own rendition,
-// which for markdown images is the full-width optimized asset.
+// markdown photos, PhotoBand) shows the widest candidate in its
+// thumbnail's srcset.
 // Rendered by Base.astro; the script exits on pages with no photos.
 ---
 
@@ -249,11 +249,19 @@
     const counter = viewer.querySelector(".viewer-counter")!;
     let index = 0;
 
-    // An anchor's href carries the full-size asset URL; a button means show
-    // the thumbnail's own (already full-width) rendition.
+    // An anchor's href is the full-size asset; a button's thumbnail is sized for the grid, so use its widest srcset file.
+    const widest = (img: HTMLImageElement) => {
+      let best = { url: img.src, w: 0 };
+      for (const candidate of (img.getAttribute("srcset") ?? "").split(",")) {
+        const [url, descriptor = ""] = candidate.trim().split(/\s+/);
+        const w = descriptor.endsWith("w") ? parseInt(descriptor, 10) : 0;
+        if (url && w > best.w) best = { url, w };
+      }
+      return best.url;
+    };
     const srcFor = (link: HTMLElement) => {
       const thumb = link.querySelector("img")!;
-      return link instanceof HTMLAnchorElement ? link.href : thumb.currentSrc || thumb.src;
+      return link instanceof HTMLAnchorElement ? link.href : widest(thumb);
     };
 
     // Warm the browser cache for a neighbouring photo so prev/next is instant.
