@@ -22,3 +22,16 @@ test("review band shows three attributed quotes and links to reviews", async ({ 
   }
   await expect(band.locator('a[href="/reviews/"]')).toHaveCount(1);
 });
+
+test("hero video stays paused under reduced motion and the toggle plays it", async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: "reduce" });
+  const page = await context.newPage();
+  await page.goto("/");
+  const video = page.locator(".hero-video");
+  const toggle = page.locator(".hero-toggle");
+  await expect(toggle).toHaveAttribute("aria-label", "Play video");
+  expect(await video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-label", "Pause video");
+  await context.close();
+});

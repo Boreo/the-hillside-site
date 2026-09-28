@@ -2,8 +2,11 @@
 title: "Tamborine Mountain Accommodation | The Hillside Retreat"
 description: "A house and a villa on the eastern edge of Tamborine Mountain, looking down the valley to the Gold Coast. Pool and heated spa, wood fires, resident koala."
 heroVideo:
-  src: /videos/hero.mp4
-  srcAv1: /videos/hero.av1.mp4
+  src: https://media.thehillside.com.au/videos/hero.mp4
+  srcAv1: https://media.thehillside.com.au/videos/hero.av1.mp4
+  wide:
+    src: https://media.thehillside.com.au/videos/hero-1080.mp4
+    srcAv1: https://media.thehillside.com.au/videos/hero-1080.av1.mp4
   poster: ../../assets/images/hero-poster.jpg
 homepage:
   heroLine: "A house and a villa overlooking the Gold Coast from Tamborine Mountain."
