@@ -95,7 +95,7 @@ const cardItemSchema = <const T extends [string, ...string[]]>(icons: T) =>
     tag: z.string().min(1).optional(),
   });
 
-const cardGroupSchema = <T extends z.ZodTypeAny>(item: T) =>
+const cardGroupSchema = <T extends z.ZodType>(item: T) =>
   z.object({
     heading: z.string().min(1),
     intro: z.string().min(1).optional(),

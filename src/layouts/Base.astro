@@ -24,9 +24,11 @@ interface Props {
   /** Share image for link previews; defaults to the hero drone still. */
   ogImage?: ImageMetadata;
   preloadImage?: string;
+  /** Emits robots noindex and omits the canonical and og:url. */
+  noindex?: boolean;
 }
 
-const { title, description = "The Hillside Retreat — secluded accommodation on Tamborine Mountain in the Gold Coast Hinterland, with coastal views, pool and heated spa.", extraJsonLd, ogImage = heroPoster, preloadImage } = Astro.props;
+const { title, description = "The Hillside Retreat — secluded accommodation on Tamborine Mountain in the Gold Coast Hinterland, with coastal views, pool and heated spa.", extraJsonLd, ogImage = heroPoster, preloadImage, noindex = false } = Astro.props;
 
 // Pages pass a bare page name; the site name is appended here. A title that
 // already carries the site name (the homepage) is used as-is.
@@ -186,7 +188,7 @@ const extraJsonLdBlocks = extraJsonLd
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={canonicalUrl} />
+{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalUrl} />}
 <link rel="preload" as="font" type="font/woff2" crossorigin href={frauncesWoff2} />
 <link rel="icon" href="/favicon.ico" sizes="32x32" />
 <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
@@ -196,7 +198,7 @@ const extraJsonLdBlocks = extraJsonLd
 <meta property="og:site_name" content="The Hillside Retreat" />
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
-<meta property="og:url" content={canonicalUrl} />
+{!noindex && <meta property="og:url" content={canonicalUrl} />}
 <meta property="og:image" content={ogImageUrl} />
 <meta property="og:image:width" content={String(ogImageOptimized.attributes.width)} />
 <meta property="og:image:height" content={String(ogImageOptimized.attributes.height)} />

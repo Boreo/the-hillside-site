@@ -9,6 +9,13 @@ test("pages carry a canonical URL on the production domain", async ({ page }) =>
   );
 });
 
+test("404 page is noindex with no canonical", async ({ page }) => {
+  await page.goto("/no-such-page/");
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex");
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+  await expect(page.locator('meta[property="og:url"]')).toHaveCount(0);
+});
+
 test("homepage canonical is the bare domain", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
