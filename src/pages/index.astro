@@ -16,7 +16,7 @@ if (!page?.data.homepage || !page.data.heroVideo) {
 }
 const home = page.data.homepage;
 
-const poster = await getImage({ src: page.data.heroVideo.poster, format: "jpg" });
+const poster = await getImage({ src: page.data.heroVideo.poster, format: "webp" });
 ---
 
 <Base title={page.data.title} description={page.data.description} preloadImage={poster.src}>
