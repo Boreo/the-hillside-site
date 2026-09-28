@@ -121,8 +121,7 @@ const treatmentGroupSchema = cardGroupSchema(
   }),
 );
 
-// Hero videos live in the hillside-media R2 bucket, which answers byte-range
-// requests; Workers static assets do not, and iOS Safari needs them to play video.
+// R2 answers byte-range requests, which iOS Safari needs to play video.
 const videoUrl = z.string().startsWith("https://media.thehillside.com.au/videos/");
 
 const pages = defineCollection({
