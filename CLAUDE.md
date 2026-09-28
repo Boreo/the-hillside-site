@@ -11,14 +11,15 @@ Static Astro site for a two-dwelling holiday accommodation business on Tamborine
 - Standalone routes in `src/pages/`: `book.astro` (SiteMinder embed), `gallery.astro` and `reviews.astro` (driven by `src/content/gallery.yaml`, `reviews.yaml` and `review-sources.yaml`), `404.astro`.
 - `src/layouts/Base.astro` carries the nav (dropdowns grouped Accommodation / Your Stay; hamburger menu on mobile), footer, `LodgingBusiness` JSON-LD with the full business details, the booking URL constant, and Umami analytics (booking CTAs carry `data-umami-event="booking-click"`). New pages must be added to a nav group.
 - Styles are plain CSS with custom properties (brand palette tokens) in `src/styles/global.css`; body font is Fraunces via `@fontsource-variable/fraunces`.
-- Images live in `src/assets/images/<category>/` (`house`, `villa`, `external`, `drone`, `amenities`, `location`; emblem and hero poster at root), named `<descriptive-name>.<ext>` and pre-resized to 2000px or less. They go through Astro's asset pipeline (schemas use `image()`, components use `<Image>`; sharp runs at build time via `imageService: 'compile'` in the Cloudflare adapter). `public/` holds the favicons (regenerate with `scripts/make-icons.mjs`), `robots.txt` and `_headers` (security headers, staging and dev noindex). The hero drone video (720p and 1080p, AV1 and H.264) is in the `hillside-media` R2 bucket, served from `https://media.thehillside.com.au/videos/`. Upload replacements with `wrangler r2 object put hillside-media/videos/<file> --file <path> --content-type video/mp4 --cache-control "public, max-age=604800" --remote`.
+- Images live in `src/assets/images/<category>/` (`house`, `villa`, `external`, `drone`, `amenities`, `location`; emblem and hero poster at root), named `<descriptive-name>.<ext>` and pre-resized to 2000px or less. They go through Astro's asset pipeline (schemas use `image()`, components use `<Image>`; sharp runs at build time). `public/` holds the favicons (regenerate with `scripts/make-icons.mjs`), `robots.txt`, `_redirects` and `_headers` (immutable caching for `/_astro/`, security headers, staging and dev noindex). The hero drone video (720p and 1080p, AV1 and H.264) is in the `hillside-media` R2 bucket, served from `https://media.thehillside.com.au/videos/`. Upload replacements with `wrangler r2 object put hillside-media/videos/<file> --file <path> --content-type video/mp4 --cache-control "public, max-age=604800" --remote`.
 
 ## Development
 
 - Dev server: run in background mode with `astro dev --background`; manage with `astro dev stop|status|logs`.
 - `npm run build` runs `astro check` then a static build to `dist/`; it validates content schema and types. Treat any `astro check` output as a defect.
 - `npm run preview` builds then serves via `wrangler dev`.
-- `npm test` runs Playwright tests in `tests/`.
+- `npm test` runs Playwright tests in `tests/` against the production build served by `wrangler dev` on port 8787, building first unless a server is already running there (CI always builds). `.github/workflows/test.yml` runs `astro check` and the tests on PRs to `dev` and `main`.
+- Node version is pinned in `.node-version`.
 
 ## Hosting
 
@@ -39,7 +40,7 @@ Static Astro site for a two-dwelling holiday accommodation business on Tamborine
 - Content edits go in `src/content/pages/*.md` and `src/content/{gallery,reviews}.yaml` only. Guest-facing copy follows the `.claude/skills/hillside-voice` profile; owner-supplied wording is raw material to polish into that voice (fix grammar, trim repetition), not text to reproduce verbatim.
 - Dwelling facts (sleeps, bedrooms, bathrooms, amenities) live in `dwelling:` frontmatter on the dwelling pages, where they drive the facts strip and Accommodation JSON-LD. Update facts there, not in prose, because prose should not restate these numbers.
 - Every image needs meaningful alt text. The gallery schema enforces this.
-- Legacy Squarespace paths `/home` and `/further-inform` redirect via `astro.config.mjs`. Keep them.
+- Legacy Squarespace paths `/home` and `/further-inform` redirect via `public/_redirects`. Keep them.
 - Comments must stand alone: a comment states a constraint or non-obvious why in present terms, understandable from the current file only. No references to prior versions or rejected alternatives ("now uses X", "instead of Y"), and no restating what the adjacent code already says. Fix a bad comment by rewriting it, not blank-deleting, when it carries a real why.
 
 ## Working from GitHub issues
