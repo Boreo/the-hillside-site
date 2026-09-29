@@ -19,13 +19,13 @@ homepage:
       image:
         src: ../../assets/images/external/deck-with-view-day.jpg
         alt: "Wraparound verandah at Hillside House with sweeping coastal views"
-      line: "A spacious three-bedroom family home with views of the coastline and valley from the living room, and a wraparound verandah for dining outside."
+      line: "Our family home, with coastal views from the living room and a kitchen open to it, so whoever is cooking stays part of the conversation. The wraparound verandah has a gas BBQ for dinners outside."
     - slug: hillside-villa
       href: /hillside-villa/
       image:
         src: ../../assets/images/villa/hillside-villa-dining-area.jpeg
         alt: "Hillside Villa dining area"
-      line: "A self-contained villa with its own entry, a private courtyard, and a fireplace for cold mountain nights."
+      line: "A retreat for two, with its own entry and a private courtyard for morning coffee or a glass of wine under the stars. Most of our villa guests are couples, and there's a wood fireplace for cold mountain nights."
   combinedLine: "For larger groups and families, a connecting door joins the House and Villa into one retreat for up to eight guests. To book the combination, get in touch with us directly."
   photoBand:
     - src: ../../assets/images/external/goldcoast-at-dusk.jpeg
