@@ -20,7 +20,6 @@ import Base from "../layouts/Base.astro";
     >
     </div>
   </div>
-</Base>
 
 <script is:inline>
   // The SiteMinder widget reads data-query-* attributes and whitelisted page
@@ -53,6 +52,16 @@ import Base from "../layouts/Base.astro";
       s.src = "https://widget.siteminder.com/ibe.min.js";
       document.body.appendChild(s);
     }
+    // The widget injects an untitled iframe and, on phones, a viewport meta
+    // with maximum-scale=1 that blocks pinch-zoom.
+    new MutationObserver(function () {
+      document.querySelectorAll(".ibe iframe:not([title])").forEach(function (f) {
+        f.title = "Check availability and book";
+      });
+      document.querySelectorAll('meta[name="viewport"][content*="maximum-scale"]').forEach(function (m) {
+        m.remove();
+      });
+    }).observe(document.documentElement, { childList: true, subtree: true });
     setTimeout(loadWidget, 1500);
     fetch("/cdn-cgi/trace")
       .then(function (r) { return r.text(); })
@@ -63,6 +72,7 @@ import Base from "../layouts/Base.astro";
       .catch(function () { loadWidget(); });
   })();
 </script>
+</Base>
 
 <style>
   .book-page {

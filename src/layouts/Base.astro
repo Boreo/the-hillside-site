@@ -5,11 +5,15 @@ import frauncesWoff2 from "@fontsource-variable/fraunces/files/fraunces-latin-wg
 import { getCollection } from "astro:content";
 import { Image, getImage } from "astro:assets";
 import LightboxViewer from "../components/LightboxViewer.astro";
+import { getDwellings } from "../lib/dwellings";
 import emblem from "../assets/images/the-hillside-retreat-emblem.png";
 import heroPoster from "../assets/images/hero-poster.jpg";
 import type { ImageMetadata } from "astro";
 
 export const BOOK_URL = "/book/";
+
+/** Umami event name for links into the booking engine, undefined for any other href. */
+export const bookingEvent = (href: string) => (href.startsWith(BOOK_URL) ? "booking-click" : undefined);
 
 /** Stable node identity for the business, referenced from per-page JSON-LD
  * (dwelling containedInPlace) so answer engines merge every page's
@@ -71,8 +75,8 @@ const nav = [
 ];
 
 // aria-current for the link matching the page being rendered. A dropdown
-// parent whose child matches gets aria-current="true" — the section is
-// current, the exact page is the child.
+// parent whose child matches gets aria-current="true". The section is
+// current and the exact page is the child, even when the parent shares its href.
 const current = (href: string) =>
   href === Astro.url.pathname ? "page" : undefined;
 const currentSection = (children: { href: string }[]) =>
@@ -83,6 +87,8 @@ const currentSection = (children: { href: string }[]) =>
 const footerLinks = nav.flatMap((item) =>
   "children" in item && item.children ? item.children : [item],
 );
+
+const { house, villa, combined } = await getDwellings();
 
 const profileUrls = (await getCollection("reviewSources")).map(({ data }) => data.url);
 
@@ -103,8 +109,7 @@ const jsonLd = {
       "@id": BUSINESS_ID,
       name: "The Hillside Retreat",
       url: Astro.site!.href,
-      description:
-        "Secluded, tranquil accommodation on Tamborine Mountain in the Gold Coast Hinterland. Hillside House (3-bedroom, sleeps 6) and Hillside Villa (1-bedroom, sleeps 2), bookable separately or combined for up to 8 guests.",
+      description: `Secluded, tranquil accommodation on Tamborine Mountain in the Gold Coast Hinterland. Hillside House (${house.bedrooms.length}-bedroom, sleeps ${house.sleeps}) and Hillside Villa (${villa.bedrooms.length}-bedroom, sleeps ${villa.sleeps}), bookable separately or combined for up to ${combined.sleeps} guests.`,
       email: "stay@thehillside.com.au",
       telephone: "+61466990185",
       image: [new URL(heroPosterOptimized.src, Astro.site).href],
@@ -159,6 +164,9 @@ const jsonLd = {
   ],
 };
 
+// Escaping < stops content text containing "</script>" from closing the element.
+const toJsonLd = (data: object) => JSON.stringify(data).replace(/</g, "\\u003c");
+
 const extraJsonLdBlocks = extraJsonLd
   ? Array.isArray(extraJsonLd)
     ? extraJsonLd
@@ -187,10 +195,10 @@ const extraJsonLdBlocks = extraJsonLd
 <meta property="og:image:width" content={String(ogImageOptimized.attributes.width)} />
 <meta property="og:image:height" content={String(ogImageOptimized.attributes.height)} />
 <meta name="twitter:card" content="summary_large_image" />
-<script is:inline defer src="https://cloud.umami.is/script.js" data-website-id="a3ea87f9-e118-444b-8a27-49aa9ac101cb"></script>
-<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+<script is:inline defer src="https://cloud.umami.is/script.js" data-website-id="a3ea87f9-e118-444b-8a27-49aa9ac101cb" data-domains="www.thehillside.com.au,thehillside.com.au"></script>
+<script is:inline type="application/ld+json" set:html={toJsonLd(jsonLd)} />
 {extraJsonLdBlocks.map((block) => (
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
+  <script is:inline type="application/ld+json" set:html={toJsonLd(block)} />
 ))}
 </head>
 <body>
@@ -199,17 +207,27 @@ const extraJsonLdBlocks = extraJsonLd
 
 <header>
   <a href="/" class="brand" aria-current={current("/")}>
-    <Image src={emblem} alt="The Hillside Retreat emblem" height={64} densities={[1, 2]} loading="eager" />
+    <Image src={emblem} alt="" height={64} densities={[1, 2]} loading="eager" />
     <span class="brand-name">The Hillside Retreat</span>
   </a>
+  {/* The toggle precedes the nav so Tab moves from it into the open mobile
+      menu. Flex order places the Book button before it on screen. */}
+  <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+  </button>
   <nav id="site-nav">
-    {nav.map((item) =>
+    {nav.map((item, n) =>
       "children" in item && item.children ? (
         <div class="nav-drop">
-          <a class="nav-parent slide-underline" href={item.href} aria-haspopup="true" aria-current={current(item.href) ?? currentSection(item.children)}>
-            {item.label} <span class="caret" aria-hidden="true">▾</span>
+          <a class="nav-parent slide-underline" href={item.href} aria-current={currentSection(item.children) ?? current(item.href)}>
+            {item.label}
           </a>
-          <div class="drop-menu">
+          <button class="drop-toggle" type="button" aria-expanded="false" aria-controls={`drop-${n}`} aria-label={`${item.label} pages`}>
+            <span class="caret" aria-hidden="true">▾</span>
+          </button>
+          <div class="drop-menu" id={`drop-${n}`}>
             {item.children.map((c) => <a href={c.href} aria-current={current(c.href)}><span class="slide-underline">{c.label}</span></a>)}
           </div>
         </div>
@@ -219,19 +237,55 @@ const extraJsonLdBlocks = extraJsonLd
     )}
   </nav>
   <a class="btn nav-book" href={BOOK_URL} data-umami-event="booking-click">Book Direct</a>
-  <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
-    <span aria-hidden="true"></span>
-    <span aria-hidden="true"></span>
-    <span aria-hidden="true"></span>
-  </button>
 </header>
 
 <script>
   const header = document.querySelector("header")!;
   const toggle = document.querySelector<HTMLButtonElement>(".nav-toggle");
-  toggle?.addEventListener("click", () => {
-    const open = header.classList.toggle("nav-open");
-    toggle.setAttribute("aria-expanded", String(open));
+  const setMenu = (open: boolean) => {
+    header.classList.toggle("nav-open", open);
+    toggle?.setAttribute("aria-expanded", String(open));
+  };
+  toggle?.addEventListener("click", () => setMenu(!header.classList.contains("nav-open")));
+
+  const drops = [...document.querySelectorAll<HTMLElement>(".nav-drop")];
+  const setDrop = (drop: HTMLElement, open: boolean) => {
+    drop.classList.toggle("open", open);
+    drop.querySelector(".drop-toggle")?.setAttribute("aria-expanded", String(open));
+  };
+  const closeDrops = () => drops.forEach((d) => setDrop(d, false));
+
+  drops.forEach((drop) => {
+    drop.querySelector(".drop-toggle")?.addEventListener("click", () => {
+      const open = !drop.classList.contains("open");
+      closeDrops();
+      setDrop(drop, open);
+    });
+    drop.addEventListener("focusout", (e) => {
+      if (!drop.contains(e.relatedTarget as Node | null)) setDrop(drop, false);
+    });
+    drop.addEventListener("mouseleave", () => drop.classList.remove("dismissed"));
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!(e.target as Element).closest(".nav-drop")) closeDrops();
+  });
+
+  // Escape closes an open or hovered dropdown first, then the mobile menu.
+  // Focus inside a closing dropdown moves to its caret button, and closing the
+  // mobile menu focuses the toggle.
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const drop = drops.find((d) => d.classList.contains("open") || d.matches(":hover"));
+    if (drop) {
+      const focusedInside = drop.contains(document.activeElement);
+      setDrop(drop, false);
+      if (drop.matches(":hover")) drop.classList.add("dismissed");
+      if (focusedInside) drop.querySelector<HTMLElement>(".drop-toggle")?.focus();
+    } else if (header.classList.contains("nav-open")) {
+      setMenu(false);
+      toggle?.focus();
+    }
   });
 
   // Wide touch devices (tablets) get no hover: first tap opens the dropdown,
@@ -239,20 +293,14 @@ const extraJsonLdBlocks = extraJsonLd
   // click. Below the mobile breakpoint the panel shows sub-links inline, so
   // parent links navigate on first tap.
   if (window.matchMedia("(hover: none) and (min-width: 56.0625rem)").matches) {
-    const drops = document.querySelectorAll<HTMLElement>(".nav-drop");
     drops.forEach((drop) => {
-      const parent = drop.querySelector<HTMLAnchorElement>(".nav-parent");
-      parent?.addEventListener("click", (e) => {
+      drop.querySelector(".nav-parent")?.addEventListener("click", (e) => {
         if (!drop.classList.contains("open")) {
           e.preventDefault();
-          drops.forEach((d) => d.classList.remove("open"));
-          drop.classList.add("open");
+          closeDrops();
+          setDrop(drop, true);
         }
       });
-    });
-    document.addEventListener("click", (e) => {
-      if (!(e.target as Element).closest(".nav-drop"))
-        drops.forEach((d) => d.classList.remove("open"));
     });
   }
 </script>
@@ -267,7 +315,7 @@ const extraJsonLdBlocks = extraJsonLd
   <div class="footer-inner">
     <div class="footer-brand">
       <span class="footer-brand-row">
-        <Image src={emblem} alt="The Hillside Retreat emblem" height={64} densities={[1, 2]} />
+        <Image src={emblem} alt="" height={64} densities={[1, 2]} />
         <span class="footer-wordmark">The Hillside Retreat</span>
       </span>
       <p>Secluded, tranquil accommodation on Tamborine Mountain, in the Gold Coast Hinterland.</p>
@@ -287,7 +335,7 @@ const extraJsonLdBlocks = extraJsonLd
     <div class="footer-col">
       <h2>Book</h2>
       <p>Two hillside dwellings — book one, or both together.</p>
-      <a class="btn btn-outline" href={BOOK_URL}>Book with us</a>
+      <a class="btn btn-outline" href={BOOK_URL} data-umami-event="booking-click">Book with us</a>
     </div>
   </div>
   <div class="footer-base">

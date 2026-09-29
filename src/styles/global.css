@@ -274,11 +274,31 @@ nav a.btn:hover {
 
 .nav-drop {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.nav-parent .caret {
-  font-size: 0.7em;
+.drop-toggle {
+  display: grid;
+  place-items: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0;
+  margin-left: 0.1rem;
+  background: none;
+  border: none;
+  border-radius: 4px;
   color: var(--muted);
+  cursor: pointer;
+}
+
+.drop-toggle .caret {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+.nav-drop.open .drop-toggle .caret {
+  transform: rotate(180deg);
 }
 
 .drop-menu {
@@ -321,10 +341,10 @@ nav a.btn:hover {
   color: var(--accent-dark);
 }
 
-/* Touch devices open via the .open class (set by the header script) instead. */
+/* Keyboard and touch open via the .open class (set by the header script).
+   .dismissed hides a hovered menu after Escape until the pointer leaves. */
 @media (hover: hover) {
-  .nav-drop:hover .drop-menu,
-  .nav-drop:focus-within .drop-menu {
+  .nav-drop:hover:not(.dismissed) .drop-menu {
     display: block;
   }
 }
@@ -407,7 +427,11 @@ nav a.btn:hover {
     color: var(--accent-dark);
   }
 
-  .nav-parent .caret {
+  .nav-drop {
+    display: block;
+  }
+
+  .drop-toggle {
     display: none;
   }
 
@@ -739,8 +763,9 @@ blockquote footer {
   padding-inline: calc(50vw - 50%);
 }
 
-/* Anchors feeding the <dialog> photo viewer (LightboxViewer.astro);
-   rehype-photo-runs.mjs and CardGroups.astro emit them. */
+/* Photo triggers feeding the <dialog> viewer (LightboxViewer.astro).
+   rehype-photo-runs.mjs and PhotoBand emit buttons, the gallery and
+   CardGroups.astro emit anchors. */
 .lightbox-open {
   display: block;
   height: 100%;
@@ -778,12 +803,6 @@ button.lightbox-open {
     transform: translateZ(0) translateY(-4px);
     box-shadow: 0 10px 20px rgb(37 43 33 / 0.18);
   }
-}
-
-.hero-video {
-  width: 100%;
-  border-radius: 4px;
-  display: block;
 }
 
 /* Glass CTA button used on image-panel heroes (homepage and dwelling pages). */
@@ -1481,7 +1500,7 @@ main .policy-toc a:not([class]):hover {
 }
 
 /* Deep links (/faq/#are-pets-allowed) light up the landed answer. */
-.faq-item:target .faq-a {
+.faq-item:has(> .faq-q:target) .faq-a {
   border-left-color: var(--accent);
 }
 

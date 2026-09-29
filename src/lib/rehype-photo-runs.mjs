@@ -4,14 +4,15 @@
 //  - runs of 2+ consecutive image-only paragraphs -> <div class="photo-run">
 //  - a solitary image paragraph after a text paragraph -> <div class="media-row">
 //    holding both, alternating sides via the media-row-flip class
-//  - an h2 + optional image + link-bearing paragraph + optional link-only
-//    CTA paragraph -> cross-sell card with a generated facts line;
-//    consecutive cards group into <div class="cross-sell-row">
+//  - on dwelling pages only, an h2 + optional image + link-bearing paragraph
+//    + optional link-only CTA paragraph -> cross-sell card with a facts line
+//    when the link targets a dwelling; consecutive cards group into
+//    <div class="cross-sell-row">
 //  - remaining link-only paragraphs -> button-styled links
 //  - every other photo -> button.lightbox-open feeding the site-wide
 //    <dialog> viewer (LightboxViewer.astro)
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { parse } from "yaml";
 import {
@@ -23,7 +24,7 @@ import {
   soleChild,
   factIcon,
 } from "./hast-utils.mjs";
-import { sumFacts, factLabels } from "./dwelling-facts.mjs";
+import { factLabels } from "./dwelling-facts.mjs";
 
 const isImageParagraph = (node) => isElement(node, "p") && !!soleChild(node, "img");
 
@@ -48,33 +49,22 @@ const firstHref = (node) => {
   return null;
 };
 
-// Sleeps/bedrooms for a dwelling page, read from its frontmatter so the
-// numbers stay single-sourced; /house-and-villa/ is the two combined.
-// Cached per process: in dev, frontmatter fact edits need a server restart
-// to show in cross-sell cards.
+// Sleeps/bedrooms/bathrooms for the page a link targets, read from that
+// page's dwelling frontmatter so the numbers stay single-sourced. Null when
+// the target is not a dwelling page. Cached per process: in dev, frontmatter
+// fact edits need a server restart to show in cross-sell cards.
 const factsCache = new Map();
-const dwellingFacts = (slug) => {
+const factsFor = (href) => {
+  const slug = new URL(href, "http://x").pathname.replaceAll("/", "");
   if (factsCache.has(slug)) return factsCache.get(slug);
-  const raw = readFileSync(
-    path.join(process.cwd(), "src/content/pages", `${slug}.md`),
-    "utf8",
-  );
+  const file = path.join(process.cwd(), "src/content/pages", `${slug}.md`);
   // Anchored to the leading delimiter so a --- inside the body or a
   // frontmatter string can't truncate the parse.
-  const frontmatter = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!frontmatter) throw new Error(`No frontmatter in ${slug}.md`);
-  const d = parse(frontmatter[1]).dwelling;
-  const facts = { sleeps: d.sleeps, bedrooms: d.bedrooms.length, bathrooms: d.bathrooms };
+  const frontmatter = existsSync(file) && readFileSync(file, "utf8").match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  const d = frontmatter && parse(frontmatter[1]).dwelling;
+  const facts = d ? { sleeps: d.sleeps, bedrooms: d.bedrooms.length, bathrooms: d.bathrooms } : null;
   factsCache.set(slug, facts);
   return facts;
-};
-
-const factsFor = (href) => {
-  const slug = href.replaceAll("/", "");
-  if (slug === "house-and-villa") {
-    return sumFacts([dwellingFacts("hillside-house"), dwellingFacts("hillside-villa")]);
-  }
-  return dwellingFacts(slug);
 };
 
 const factsLine = (facts) =>
@@ -88,6 +78,7 @@ const factsLine = (facts) =>
 
 export default function rehypePhotoRuns() {
   return (tree, file) => {
+    const isDwelling = !!file.data.astro?.frontmatter?.dwelling;
     const walk = (parent) => {
       if (!parent.children) return;
       // Whitespace between block elements is insignificant; dropping it
@@ -146,6 +137,7 @@ export default function rehypePhotoRuns() {
         if (cta) j++;
         const after = paired[j + 1];
         if (
+          isDwelling &&
           isElement(node, "h2") &&
           next &&
           isTextParagraph(next) &&
@@ -180,7 +172,7 @@ export default function rehypePhotoRuns() {
               className: secondary ? ["btn", "btn-outline"] : ["btn"],
             };
             const facts = factsFor(firstHref(cta));
-            body.splice(1, 0, factsLine(facts));
+            if (facts) body.splice(1, 0, factsLine(facts));
             body.push(cta);
           }
           const children = [image, div("cross-sell-body", body)].filter(Boolean);
@@ -219,6 +211,14 @@ export default function rehypePhotoRuns() {
       parent.children = carded;
     };
     walk(tree);
+
+    const tagBookingLinks = (node) => {
+      if (isElement(node, "a") && String(node.properties.href ?? "").startsWith("/book/")) {
+        node.properties.dataUmamiEvent = "booking-click";
+      }
+      node.children?.forEach(tagBookingLinks);
+    };
+    tagBookingLinks(tree);
 
     // Upper bounds: each layout's share of main's 72rem max-width, ignoring padding and gaps.
     const SIZES = {
@@ -278,7 +278,7 @@ export default function rehypePhotoRuns() {
     // On content pages the first image sits at or near the top, so load it
     // eagerly instead of Astro's lazy default. Dwelling pages open with the
     // DwellingLayout hero, which carries the priority instead.
-    if (file.data.astro?.frontmatter?.dwelling) return;
+    if (isDwelling) return;
     const firstImg = (parent) => {
       for (const node of parent.children ?? []) {
         if (isElement(node, "img")) return node;

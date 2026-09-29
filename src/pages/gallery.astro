@@ -2,17 +2,12 @@
 import { getCollection } from "astro:content";
 import { Image, getImage } from "astro:assets";
 import Base from "../layouts/Base.astro";
+import { inFileOrder } from "../lib/file-order";
 import galleryRaw from "../content/gallery.yaml?raw";
 
-// getCollection returns entries keyed by id, not in file order; the yaml file
-// carries the curated display order (drone > external > house > villa >
-// amenities), so sort by each id's position in the raw file.
-const order = new Map(
-  [...galleryRaw.matchAll(/^- id: (.+)$/gm)].map((m, i) => [m[1].trim(), i]),
-);
-const images = (await getCollection("gallery")).sort(
-  (a, b) => (order.get(a.id) ?? 99) - (order.get(b.id) ?? 99),
-);
+// getCollection returns entries by id; the yaml file carries the curated
+// display order (drone > external > house > villa > amenities).
+const images = inFileOrder(await getCollection("gallery"), galleryRaw);
 const fulls = await Promise.all(
   images.map(({ data }) => getImage({ src: data.src, width: data.src.width })),
 );

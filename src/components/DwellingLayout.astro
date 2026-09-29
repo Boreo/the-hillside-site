@@ -1,17 +1,11 @@
 ---
 import { Image } from "astro:assets";
 import FactsLine from "./FactsLine.astro";
+import type { CollectionEntry } from "astro:content";
+import { bookingEvent } from "../layouts/Base.astro";
 
 interface Props {
-  dwelling: {
-    name: string;
-    hero: { src: ImageMetadata; alt: string };
-    sleeps: number;
-    bedrooms: { bed: string; sleeps: number; ensuite: boolean }[];
-    bathrooms: number;
-    amenities: string[];
-    cta: { label: string; href: string };
-  };
+  dwelling: NonNullable<CollectionEntry<"pages">["data"]["dwelling"]>;
 }
 const { dwelling } = Astro.props;
 ---
@@ -27,7 +21,7 @@ const { dwelling } = Astro.props;
     <ul class="amenities-line">
       {dwelling.amenities.map((a) => <li>{a}</li>)}
     </ul>
-    <a class="btn" href={dwelling.cta.href}>{dwelling.cta.label}</a>
+    <a class="btn" href={dwelling.cta.href} data-umami-event={bookingEvent(dwelling.cta.href)}>{dwelling.cta.label}</a>
   </div>
   <Image
     src={dwelling.hero.src}
