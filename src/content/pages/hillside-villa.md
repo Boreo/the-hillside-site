@@ -39,7 +39,7 @@ dwelling:
     - Ceiling fan
     - Bed linen, towels and toiletries supplied
   cta:
-    label: Book Direct
+    label: Book with us
     href: /book/?room_rate=413448
 ---
 
