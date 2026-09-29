@@ -1,12 +1,25 @@
 ---
 import { BOOK_URL } from "../layouts/Base.astro";
 import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import { inFileOrder } from "../lib/file-order";
+import sourcesRaw from "../content/review-sources.yaml?raw";
 
 interface Props {
   image: { src: ImageMetadata; alt: string };
   line: string;
 }
 const { image, line } = Astro.props;
+
+const sources = inFileOrder(await getCollection("reviewSources"), sourcesRaw).flatMap(({ data }) =>
+  data.rating !== null && data.count !== null
+    ? [{ platform: data.platform, scale: data.scale, rating: data.rating, count: data.count }]
+    : [],
+);
+const ratings = new Intl.ListFormat("en-AU").format(
+  sources.map((s) => `${s.rating}${s.scale === 10 ? " out of 10" : ""} on ${s.platform}`),
+);
+const reviewCount = sources.reduce((sum, s) => sum + s.count, 0);
 ---
 
 <section class="closing">
@@ -17,8 +30,16 @@ const { image, line } = Astro.props;
     sizes="(max-width: 71rem) 100vw, 68rem"
     loading="lazy"
   />
-  <p>{line}</p>
+  <p class="closing-line">{line}</p>
   <a class="btn" href={BOOK_URL} data-umami-event="booking-click">Book with us</a>
+  {
+    sources.length > 0 && (
+      <p class="closing-ratings">
+        Our guests have rated us {ratings}, across {reviewCount} reviews.{" "}
+        <a class="editorial-link" href="/reviews/">Read their reviews</a>
+      </p>
+    )
+  }
 </section>
 
 <style>
@@ -32,12 +53,18 @@ const { image, line } = Astro.props;
     object-fit: cover;
     border-radius: 8px;
   }
-  .closing p {
+  .closing-line {
     font-family: var(--font-display);
     font-variation-settings: var(--font-display-settings);
     font-weight: 500;
     font-size: clamp(1.2rem, 2.5vw, 1.5rem);
     color: var(--accent-dark);
     margin: 1.5rem 0 1.25rem;
+  }
+  .closing-ratings {
+    font-size: 0.95rem;
+    color: var(--muted);
+    max-width: 44ch;
+    margin: 1.25rem auto 0;
   }
 </style>
