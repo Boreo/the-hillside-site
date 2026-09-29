@@ -1,13 +1,13 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import GithubSlugger from "github-slugger";
 
 // Question and group counts come from the markdown so the test tracks
 // content edits. Groups are h2s; the closing h2 has no questions under it.
 const faqMd = readFileSync("src/content/pages/faq.md", "utf8");
 const questions = faqMd.match(/^### (.+)$/gm)!.map((l) => l.slice(4).trim());
 const groups = faqMd.split(/^## /m).slice(1).filter((g) => /^### /m.test(g));
-const slugOf = (t: string) =>
-  t.toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-");
+const slugOf = (t: string) => new GithubSlugger().slug(t);
 
 test("faq groups questions with a quick-answers chip strip", async ({ page }) => {
   await page.goto("/faq/");
@@ -26,9 +26,9 @@ test("faq groups questions with a quick-answers chip strip", async ({ page }) =>
   );
 });
 
-test("faq questions deep-link by slug id", async ({ page }) => {
+test("faq questions deep-link by heading id", async ({ page }) => {
   await page.goto("/faq/#are-pets-allowed");
-  const item = page.locator("#are-pets-allowed");
+  const item = page.locator(".faq-item").filter({ has: page.locator("#are-pets-allowed") });
   await expect(item.locator(".faq-q")).toHaveText("Are pets allowed?");
   await expect(item.locator(".faq-a")).toContainText("pet-free");
 });

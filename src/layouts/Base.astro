@@ -5,6 +5,7 @@ import frauncesWoff2 from "@fontsource-variable/fraunces/files/fraunces-latin-wg
 import { getCollection } from "astro:content";
 import { Image, getImage } from "astro:assets";
 import LightboxViewer from "../components/LightboxViewer.astro";
+import { getDwellings } from "../lib/dwellings";
 import emblem from "../assets/images/the-hillside-retreat-emblem.png";
 import heroPoster from "../assets/images/hero-poster.jpg";
 import type { ImageMetadata } from "astro";
@@ -87,6 +88,8 @@ const footerLinks = nav.flatMap((item) =>
   "children" in item && item.children ? item.children : [item],
 );
 
+const { house, villa, combined } = await getDwellings();
+
 const profileUrls = (await getCollection("reviewSources")).map(({ data }) => data.url);
 
 const heroPosterOptimized = await getImage({ src: heroPoster, width: 1200, format: "jpg" });
@@ -106,8 +109,7 @@ const jsonLd = {
       "@id": BUSINESS_ID,
       name: "The Hillside Retreat",
       url: Astro.site!.href,
-      description:
-        "Secluded, tranquil accommodation on Tamborine Mountain in the Gold Coast Hinterland. Hillside House (3-bedroom, sleeps 6) and Hillside Villa (1-bedroom, sleeps 2), bookable separately or combined for up to 8 guests.",
+      description: `Secluded, tranquil accommodation on Tamborine Mountain in the Gold Coast Hinterland. Hillside House (${house.bedrooms.length}-bedroom, sleeps ${house.sleeps}) and Hillside Villa (${villa.bedrooms.length}-bedroom, sleeps ${villa.sleeps}), bookable separately or combined for up to ${combined.sleeps} guests.`,
       email: "stay@thehillside.com.au",
       telephone: "+61466990185",
       image: [new URL(heroPosterOptimized.src, Astro.site).href],

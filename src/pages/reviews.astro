@@ -5,12 +5,15 @@ import PullQuote from "../components/PullQuote.astro";
 import FactIcon from "../components/FactIcon.astro";
 import { attribution } from "../lib/reviews";
 import { BOOK_URL } from "../layouts/Base.astro";
+import { inFileOrder } from "../lib/file-order";
+import reviewsRaw from "../content/reviews.yaml?raw";
+import sourcesRaw from "../content/review-sources.yaml?raw";
 
-const reviews = await getCollection("reviews");
+const reviews = inFileOrder(await getCollection("reviews"), reviewsRaw);
 // The review carrying a `featured` excerpt becomes the pull-quote and is
 // left out of the grid.
 const featured = reviews.find(({ data }) => data.featured);
-const sources = (await getCollection("reviewSources")).filter(
+const sources = inFileOrder(await getCollection("reviewSources"), sourcesRaw).filter(
   ({ data }) => data.rating !== null && data.count !== null,
 );
 

@@ -155,6 +155,9 @@ const pages = defineCollection({
       // Restructure the body as the guest-info policy page
       // (rehype-policy-page.mjs): chip strip, topic cards, numbered terms.
       policyPage: z.boolean().default(false),
+      // h2 heading of the policy page section laid out as numbered terms
+      // with a contents list.
+      policyTerms: z.string().min(1).optional(),
       placeGroups: z.array(placeGroupSchema(ctx)).min(1).optional(),
       treatmentGroups: z.array(treatmentGroupSchema).min(1).optional(),
       // Fine-print lines rendered after the card groups (e.g. the
