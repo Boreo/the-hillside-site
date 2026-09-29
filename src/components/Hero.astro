@@ -14,6 +14,15 @@ const { video, line } = Astro.props;
 ---
 
 <section class="hero">
+  {/* Without script Chromium forces native controls onto the video, over the
+      hero CTA, so the video stays hidden until the script shows it and this
+      poster image stands in. */}
+  <img
+    class="hero-poster"
+    src={video.posterSrc}
+    alt="Aerial view over The Hillside Retreat towards the Gold Coast skyline"
+    fetchpriority="high"
+  />
   <video
     class="hero-video"
     poster={video.posterSrc}
@@ -21,6 +30,7 @@ const { video, line } = Astro.props;
     muted
     loop
     playsinline
+    hidden
     aria-label="Aerial drone view over The Hillside Retreat towards the Gold Coast skyline"
   >
     {video.wide?.srcAv1 && (
@@ -44,7 +54,11 @@ const { video, line } = Astro.props;
   // Script-started playback keeps reduced-motion and Save-Data visitors on the poster.
   const video = document.querySelector<HTMLVideoElement>(".hero-video");
   const toggle = document.querySelector<HTMLButtonElement>(".hero-toggle");
+  const poster = document.querySelector<HTMLImageElement>(".hero-poster");
   if (video && toggle) {
+    video.hidden = false;
+    // The video now carries the description; the poster underneath is decorative.
+    if (poster) poster.alt = "";
     const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
     const saveData =
       (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData ?? false;
@@ -73,6 +87,7 @@ const { video, line } = Astro.props;
     overflow: hidden;
     border-radius: 12px;
   }
+  .hero-poster,
   .hero-video {
     position: absolute;
     inset: 0;
