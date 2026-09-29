@@ -10,7 +10,7 @@ Static Astro site for a two-dwelling holiday accommodation business on Tamborine
 - The homepage is `src/pages/index.astro`, composed from `src/components/` (Hero, Arrival, DwellingCards, ReviewBand, PhotoBand, PullQuote, Closing; FactsLine/FactIcon render the sleeps/bedrooms/bathrooms facts line, wording shared via `src/lib/dwelling-facts.mjs`) with copy from `src/content/pages/index.md` frontmatter.
 - Standalone routes in `src/pages/`: `book.astro` (SiteMinder embed), `gallery.astro` and `reviews.astro` (driven by `src/content/gallery.yaml`, `reviews.yaml` and `review-sources.yaml`, rendered in file order via `src/lib/file-order.ts`), `404.astro`, and `llms.txt.ts`.
 - `src/layouts/Base.astro` carries the nav (dropdowns grouped Accommodation / Your Stay; hamburger menu on mobile), footer, `LodgingBusiness` JSON-LD with the full business details, the booking URL constant, and Umami analytics. Booking CTAs carry `data-umami-event="booking-click"`. `bookingEvent()` sets it on data-driven links and `rehype-photo-runs.mjs` sets it on markdown links to `/book/`. New pages must be added to a nav group.
-- Styles are plain CSS with custom properties (brand palette tokens) in `src/styles/global.css`; body font is Fraunces via `@fontsource-variable/fraunces`.
+- Styles are plain CSS with custom properties (brand palette tokens) in `src/styles/global.css`. Headings and display text use Fraunces via `@fontsource-variable/fraunces`, and body text uses the system sans-serif stack.
 - Images live in `src/assets/images/<category>/` (`house`, `villa`, `external`, `drone`, `amenities`, `location`; emblem and hero poster at root), named `<descriptive-name>.<ext>` and pre-resized to 2000px or less. They go through Astro's asset pipeline (schemas use `image()`, components use `<Image>`; sharp runs at build time). `public/` holds the favicons (regenerate with `scripts/make-icons.mjs`), `robots.txt`, `_redirects` and `_headers` (immutable caching for `/_astro/`, security headers, staging and dev noindex). The hero drone video (720p and 1080p, AV1 and H.264) is in the `hillside-media` R2 bucket, served from `https://media.thehillside.com.au/videos/`. Upload replacements with `wrangler r2 object put hillside-media/videos/<file> --file <path> --content-type video/mp4 --cache-control "public, max-age=604800" --remote`.
 
 ## Development
@@ -26,7 +26,7 @@ Static Astro site for a two-dwelling holiday accommodation business on Tamborine
 - Cloudflare Workers, GitHub-connected; deploys build from `main`.
 - Staging: https://the-hillside.github-e53.workers.dev/
 - Dev worker: https://the-hillside-dev.github-e53.workers.dev/ — deployed by `.github/workflows/deploy-dev.yml` on every push to `dev`; the workflow comments the preview URL on the merged PR.
-- `.github/workflows/claude.yml` runs Claude on `@claude` mentions; its triage job posts a plan comment on `client-request` issues and waits for an `@claude` go before implementing.
+- `.github/workflows/claude.yml` runs Claude on `@claude` mentions from repo collaborators (review events skip fork PRs); its triage job posts a plan comment on `client-request` issues and waits for an `@claude` go before implementing.
 
 ## Business facts (public information)
 
