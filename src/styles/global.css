@@ -805,27 +805,34 @@ button.lightbox-open {
   }
 }
 
-/* Glass CTA button used on image-panel heroes (homepage and dwelling pages). */
+/* Glass CTA button over the homepage hero video. The backdrop dims so paper
+   text stays legible over the pale fill. */
 .btn-glass {
   display: inline-block;
   padding: 0.75rem 1.7rem;
   border-radius: 6px;
-  background: rgb(250 248 244 / 0.18);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgb(250 248 244 / 0.45);
+  background: rgb(250 248 244 / 0.35);
+  backdrop-filter: blur(12px) brightness(0.5);
+  -webkit-backdrop-filter: blur(12px) brightness(0.5);
+  border: 1px solid rgb(250 248 244 / 0.7);
   color: var(--paper);
   text-decoration: none;
   font-family: var(--font-display);
   font-variation-settings: var(--font-display-settings);
   font-weight: 500;
   font-size: 1.05rem;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: backdrop-filter 0.2s ease, border-color 0.2s ease;
 }
 
 .btn-glass:hover {
-  background: rgb(250 248 244 / 0.3);
-  border-color: rgb(250 248 244 / 0.65);
+  backdrop-filter: blur(12px) brightness(0.4);
+  -webkit-backdrop-filter: blur(12px) brightness(0.4);
+  border-color: rgb(250 248 244 / 0.9);
+}
+
+.btn-glass:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 3px;
 }
 
 /* Photo runs: consecutive markdown images grouped at build time into
