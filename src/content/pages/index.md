@@ -25,7 +25,7 @@ homepage:
       image:
         src: ../../assets/images/villa/hillside-villa-dining-area.jpeg
         alt: "Hillside Villa dining area"
-      line: "A retreat for two, with its own entry and a private courtyard for morning coffee or a glass of wine under the stars. Most of our villa guests are couples, and there's a wood fireplace for cold mountain nights."
+      line: "A self-contained retreat with its own entry and a private courtyard for morning coffee or a glass of wine under the stars. Most of our villa guests are couples, and there's a wood fireplace for cold mountain nights."
   combinedLine: "For larger groups and families, a connecting door joins the House and Villa into one retreat for up to eight guests. To book the combination, get in touch with us directly."
   photoBand:
     - src: ../../assets/images/external/goldcoast-at-dusk.jpeg
