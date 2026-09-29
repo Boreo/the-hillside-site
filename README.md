@@ -7,7 +7,7 @@ Static site for a two-dwelling holiday accommodation business on Tamborine Mount
 - **Astro**: static output. Pages render from markdown at build time and no client-side JS frameworks ship.
 - **Content**: markdown in `src/content/pages/`, a content collection whose frontmatter is schema-validated by `src/content.config.ts`. The homepage is composed from components in `src/components/` with copy from `index.md` frontmatter.
 - **Layout**: a single base layout carries the nav (dropdowns grouped Accommodation / Your Stay), footer, and `LodgingBusiness` JSON-LD for search engines and AI answer engines.
-- **Styles**: plain CSS with custom properties (brand palette tokens); Fraunces variable font.
+- **Styles**: plain CSS with custom properties (brand palette tokens). Headings use the Fraunces variable font, body text the system sans-serif.
 - **Images**: sources in `src/assets/images/`, processed by Astro's asset pipeline with sharp at build time.
 - **Hosting**: Cloudflare Workers (GitHub-connected), which runs `npm run build` and serves `dist/`. Staging: https://the-hillside.github-e53.workers.dev/ — dev worker https://the-hillside-dev.github-e53.workers.dev/ deploys on every push to `dev` via GitHub Actions.
 - **Analytics**: Umami, loaded from the base layout; booking CTAs fire a `booking-click` event.
@@ -34,6 +34,7 @@ public/              Favicons, robots.txt, _redirects, _headers (asset caching, 
 scripts/             make-icons.mjs — regenerates favicons from the emblem
 tests/               Playwright specs
 .github/workflows/   claude.yml (agent on @claude mentions, client-request triage), deploy-dev.yml, test.yml, mirror.yml, notify-client.yml
+.github/dependabot.yml  Monthly GitHub Actions update PRs against dev
 ```
 
 ## Why this architecture
@@ -46,7 +47,7 @@ This setup replaces the subscription with hosting that costs nothing on Cloudfla
 
 An AI coding agent maintains the content under human control. Four rules make that safe:
 
-1. **Approval**: git is the gate. The agent proposes changes as commits and PRs, a human reviews and merges, and the deploy pipeline builds only from `main`.
+1. **Approval**: git is the gate. The agent proposes changes as commits and PRs, a human reviews and merges, and production builds only from `main` (the dev worker builds from `dev`).
 2. **Provenance**: AI-assisted commits carry a `Co-Authored-By` trailer.
 3. **Instructions**: the agent follows checked-in rules. `CLAUDE.md` defines them (`AGENTS.md` is a symlink to it) and is versioned.
 4. **Validation**: `npm run build` validates all content frontmatter.
