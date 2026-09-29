@@ -23,9 +23,10 @@ const { groups } = Astro.props;
 
 // Group intros are plain frontmatter strings but may carry markdown links
 // (e.g. to the QPWS track map). Escape everything, then rebuild only the
-// [text](url) links as anchors.
+// [text](url) links as anchors, allowing only web, root-relative and
+// fragment URLs.
 const escapeHtml = (s: string) =>
-  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const outIcon = factIconHtml("arrow-out", "out-icon");
 
 const fullUrls = new Map<ImageMetadata, string>();
@@ -38,7 +39,7 @@ for (const group of groups)
       );
 const renderIntro = (s: string) =>
   escapeHtml(s).replace(
-    /\[([^\]]+)\]\(([^)\s]+)\)/g,
+    /\[([^\]]+)\]\(((?:https?:|\/|#)[^)\s]*)\)/g,
     (_, label, href) =>
       `<a href="${href}">${label}${href.startsWith("http") ? outIcon : ""}</a>`,
   );

@@ -164,6 +164,9 @@ const jsonLd = {
   ],
 };
 
+// Escaping < stops content text containing "</script>" from closing the element.
+const toJsonLd = (data: object) => JSON.stringify(data).replace(/</g, "\\u003c");
+
 const extraJsonLdBlocks = extraJsonLd
   ? Array.isArray(extraJsonLd)
     ? extraJsonLd
@@ -193,9 +196,9 @@ const extraJsonLdBlocks = extraJsonLd
 <meta property="og:image:height" content={String(ogImageOptimized.attributes.height)} />
 <meta name="twitter:card" content="summary_large_image" />
 <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id="a3ea87f9-e118-444b-8a27-49aa9ac101cb" data-domains="www.thehillside.com.au,thehillside.com.au"></script>
-<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+<script is:inline type="application/ld+json" set:html={toJsonLd(jsonLd)} />
 {extraJsonLdBlocks.map((block) => (
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
+  <script is:inline type="application/ld+json" set:html={toJsonLd(block)} />
 ))}
 </head>
 <body>
