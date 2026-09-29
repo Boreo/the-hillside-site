@@ -12,7 +12,7 @@ test("hillside-house split header carries name, facts, amenities and book button
   await expect(line).toContainText("Sleeps 6");
   await expect(line).toContainText("3 bedrooms");
   await expect(header.locator(".amenities-line")).toContainText("Wood fireplace");
-  await expect(header.locator('a.btn[href^="/book/"]')).toHaveText("Book Direct");
+  await expect(header.locator('a.btn[href^="/book/"]')).toHaveText("Book with us");
   await expect(header.locator("img")).toHaveCount(1);
 });
 

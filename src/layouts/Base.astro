@@ -335,7 +335,13 @@ const extraJsonLdBlocks = extraJsonLd
     <div class="footer-col">
       <h2>Book</h2>
       <p>Two hillside dwellings — book one, or both together.</p>
-      <a class="btn btn-outline" href={BOOK_URL} data-umami-event="booking-click">Book with us</a>
+      {
+        Astro.url.pathname !== BOOK_URL && (
+          <a class="btn btn-outline" href={BOOK_URL} data-umami-event="booking-click">
+            Book with us
+          </a>
+        )
+      }
     </div>
   </div>
   <div class="footer-base">
