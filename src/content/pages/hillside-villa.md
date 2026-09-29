@@ -70,7 +70,7 @@ Tamborine Mountain's rainforest walks, wineries and Gallery Walk village are a f
 - Wood burning fireplace.
 - Gas BBQ.
 - Flat screen TV with Netflix.
-- Spacious Queen bedroom sleeps 2, with overhead fan and air-conditioning.
+- Spacious Queen bedroom with overhead fan and air-conditioning.
 - Shower room with fresh linen and toiletries supplied.
 - Ironing board and iron.
 - Newly renovated inground pool and heated spa (shared facilities).
