@@ -1505,7 +1505,7 @@ main .policy-toc a:not([class]):hover {
 }
 
 /* Deep links (/faq/#are-pets-allowed) light up the landed answer. */
-.faq-item:target .faq-a {
+.faq-item:has(> .faq-q:target) .faq-a {
   border-left-color: var(--accent);
 }
 

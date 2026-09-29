@@ -1,5 +1,6 @@
 // Shared hast helpers for the rehype plugins in this directory.
 
+import GithubSlugger from "github-slugger";
 import { FACT_ICON_PATHS } from "./fact-icon-paths.mjs";
 
 export const isElement = (node, tag) => node.type === "element" && node.tagName === tag;
@@ -11,12 +12,19 @@ export const textOf = (node) => {
   return (node.children ?? []).map(textOf).join("");
 };
 
-export const slugOf = (node) =>
-  textOf(node)
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
+// Gives every heading the id Astro's heading pass would, so contents links
+// can target them before that pass runs (it keeps ids already set).
+export const assignHeadingIds = (tree) => {
+  const slugger = new GithubSlugger();
+  const visit = (node) => {
+    if (node.type === "element" && /^h[1-6]$/.test(node.tagName)) {
+      node.properties ??= {};
+      if (typeof node.properties.id !== "string") node.properties.id = slugger.slug(textOf(node));
+    }
+    node.children?.forEach(visit);
+  };
+  visit(tree);
+};
 
 export const el = (tagName, properties, children) => ({
   type: "element",
@@ -43,7 +51,8 @@ export const factIcon = (name) =>
 // Each rule's chip quotes the first paragraph matching its pattern — the
 // capture group if the pattern has one, otherwise the whole paragraph — so
 // the strip never invents wording; if the wording changes and no longer
-// matches, the chip drops out rather than drifting from the content.
+// matches, the chip drops out rather than drifting from the content. With
+// no matches at all the strip is omitted.
 export const chipStrip = (nodes, rules) => {
   const paragraphs = nodes.filter((n) => isElement(n, "p")).map((n) => textOf(n).trim());
   const chips = rules.flatMap((rule) => {
@@ -61,10 +70,11 @@ export const chipStrip = (nodes, rules) => {
     }
     return [];
   });
-  return el("p", { className: ["policy-chips"] }, chips);
+  return chips.length ? [el("p", { className: ["policy-chips"] }, chips)] : [];
 };
 
-// Sticky "On this page" contents list linking to the given headings' slug ids.
+// Sticky "On this page" contents list linking to the given headings' ids
+// (set by assignHeadingIds).
 export const tocNav = (headings, ariaLabel) =>
   el("nav", { className: ["policy-toc"], ariaLabel }, [
     el("p", { className: ["policy-toc-label"] }, [text("On this page")]),
@@ -72,7 +82,7 @@ export const tocNav = (headings, ariaLabel) =>
       "ol",
       {},
       headings.map((h) =>
-        el("li", {}, [el("a", { href: `#${slugOf(h)}` }, [text(textOf(h))])]),
+        el("li", {}, [el("a", { href: `#${h.properties.id}` }, [text(textOf(h))])]),
       ),
     ),
   ]);
