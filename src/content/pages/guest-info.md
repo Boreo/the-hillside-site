@@ -13,9 +13,9 @@ These policies apply to every stay at The Hillside Retreat, Tamborine Mountain.
 
 ### Arrival and departures
 
-Check-in: 14:00 - 17:00 pm
+Check-in: from 2.00pm
 
-Check-out: 07:00 - 10:00 am
+Check-out: by 10.00am
 
 The check in time is 2.00pm and departure time is by 10.00am unless otherwise arranged. Special arrangements can be made for early check-in and late check-outs if available directly to the owners upon booking.
 
@@ -26,8 +26,6 @@ Please call or message the owners when arrive at the property to assist you with
 Children of any age are welcome.
 
 Children aged 14 years and above are considered adults at this property.
-
-To see correct prices and occupancy information, please add the number of children in your group and their ages to your search.
 
 ### Extras and additional charges
 
@@ -67,7 +65,7 @@ Valid card details are required to secure the booking. No payment is taken at th
 
 ### Guest’s Obligations in Respect of the Property
 
-The Guest shall be responsible for the Property during the Guest’s stay. The Guest shall take all reasonable care of the Property and at the end of the stay shall leave the Property including all utensils, fixtures, fittings and equipment on, in or about the Property in a clean and tidy condition. The Guest shall be liable for any extra cleaning, breakages or damage caused to the Property or any part thereof or any of the chattels therein that may occur during the Guest’s occupation of the Property and all costs for extra cleaning, repair and replacement thereof shall be levied to the guest/guests and payable to The Hillside Retreat from the Guest Security Bond. Any such costs over and above the amount taken as a Guest Bond may be sought by the Owner through the Local Court. Any damage or breakage to any part of the Property or any of the chattels therein shall be reported to the Local Agent, or Owner as soon as practicable after the damage occurring thereto.
+The Guest shall be responsible for the Property during the Guest’s stay. The Guest shall take all reasonable care of the Property and at the end of the stay shall leave the Property including all utensils, fixtures, fittings and equipment on, in or about the Property in a clean and tidy condition. The Guest shall be liable for any extra cleaning, breakages or damage caused to the Property or any part thereof or any of the chattels therein that may occur during the Guest’s occupation of the Property and all costs for extra cleaning, repair and replacement thereof shall be levied to the guest/guests and payable to The Hillside Retreat from the Guest Security Bond. Any such costs over and above the amount taken as a Guest Bond may be sought by the Owner through the Local Court. Any damage or breakage to any part of the Property or any of the chattels therein shall be reported to The Hillside Retreat as soon as practicable after the damage occurring thereto.
 
 ### Bond
 
@@ -87,7 +85,7 @@ It is requested that the house, including the BBQ, is left in a clean and tidy c
 
 ### Additional Features (If Any)
 
-The Guest acknowledges that the use of any additional amenities including but not limited to swimming pool, spa, at the Guest’s risk and neither the Booking Agent nor the Owner shall accept any responsibility for any injury, loss or damage to property or any third party arising from the use thereof.
+The Guest acknowledges that the use of any additional amenities, including but not limited to the swimming pool and spa, is at the Guest’s risk and The Hillside Retreat shall not accept any responsibility for any injury, loss or damage to property or any third party arising from the use thereof.
 
 ### Guest’s Property
 
@@ -99,7 +97,7 @@ The Guest may only allow the Property to be occupied by the number of persons no
 
 ### Right to Refuse or Revoke Bookings
 
-The Booking Agent and the Owner reserve the right to revoke or refuse to honour any property accommodation booking which may in the opinion of either party (or at their sole discretion) be unsuitable for the Property concerned.
+The Hillside Retreat reserves the right to revoke or refuse to honour any property accommodation booking which may in its opinion (or at its sole discretion) be unsuitable for the Property concerned.
 
 ### Booking Confirmation
 
@@ -111,7 +109,7 @@ The Guest acknowledges that The Hillside Retreat has used its best endeavours to
 
 ### Description of the Property
 
-All information in respect of the Property contained in the Booking Agent’s website is believed to be correct at the time of the publication, however, all details are subject to change by The Hillside Retreat without notice. The Hillside Retreat will not accept any responsibility for any alterations to the Property or any part thereof beyond The Hillside Retreat's control or any liability for any matter or occurrences beyond The Hillside Retreat reasonable control including damage caused by extreme weather conditions, breakdown of appliances, wiring, plumbing, invasion of pests, or any act or omission on the part of the Owner causing loss, accident or injury to the Guest or any one or more of them.
+All information in respect of the Property contained on The Hillside Retreat’s website is believed to be correct at the time of the publication, however, all details are subject to change by The Hillside Retreat without notice. The Hillside Retreat will not accept any responsibility for any alterations to the Property or any part thereof beyond The Hillside Retreat’s control or any liability for any matter or occurrences beyond The Hillside Retreat’s reasonable control including damage caused by extreme weather conditions, breakdown of appliances, wiring, plumbing, invasion of pests, or any act or omission on the part of the Owner causing loss, accident or injury to the Guest or any one or more of them.
 
 ### Availability of Property
 
