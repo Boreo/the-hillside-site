@@ -13,7 +13,7 @@ dwelling:
     - ../../assets/images/villa/hillside-villa-front.jpg
     - ../../assets/images/house/house-lounge-dining-area.jpg
     - ../../assets/images/house/kitchen-island-mountain-view.jpg
-    - ../../assets/images/house/king-bedroom-white-linen.jpeg
+    - ../../assets/images/house/queen-bedroom-white-linen.jpeg
     - ../../assets/images/house/twin-bedroom-brick-wall.jpeg
     - ../../assets/images/villa/hillside-villa-dining-area.jpeg
   sleeps: 8
@@ -115,7 +115,7 @@ Our self-contained 1-bedroom Hillside Villa, with its own private entry, courtya
 
 ![Kitchen island with mountain views](../../assets/images/house/kitchen-island-mountain-view.jpg)
 
-![Queen bedroom with white linen](../../assets/images/house/king-bedroom-white-linen.jpeg)
+![Queen bedroom with white linen](../../assets/images/house/queen-bedroom-white-linen.jpeg)
 
 ![Twin bedroom with exposed brick wall](../../assets/images/house/twin-bedroom-brick-wall.jpeg)
 

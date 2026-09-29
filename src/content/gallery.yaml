@@ -138,11 +138,11 @@
 - id: kitchen-island-mountain-view.jpg
   src: ../assets/images/house/kitchen-island-mountain-view.jpg
   alt: Kitchen with white cabinetry and sweeping mountain views
-- id: king-bedroom-white-linen.jpeg
-  src: ../assets/images/house/king-bedroom-white-linen.jpeg
+- id: queen-bedroom-white-linen.jpeg
+  src: ../assets/images/house/queen-bedroom-white-linen.jpeg
   alt: Queen bedroom with white linen and balcony access
-- id: king-bedroom-teal-cushions.jpeg
-  src: ../assets/images/house/king-bedroom-teal-cushions.jpeg
+- id: queen-bedroom-teal-cushions.jpeg
+  src: ../assets/images/house/queen-bedroom-teal-cushions.jpeg
   alt: Queen bedroom with teal cushions and balcony view
 - id: twin-bedroom-brick-wall.jpeg
   src: ../assets/images/house/twin-bedroom-brick-wall.jpeg

@@ -10,7 +10,7 @@ dwelling:
     - ../../assets/images/external/retreat-entrance.jpg
     - ../../assets/images/house/house-lounge-dining-area.jpg
     - ../../assets/images/house/kitchen-island-mountain-view.jpg
-    - ../../assets/images/house/king-bedroom-white-linen.jpeg
+    - ../../assets/images/house/queen-bedroom-white-linen.jpeg
     - ../../assets/images/house/twin-bedroom-brick-wall.jpeg
     - ../../assets/images/house/bathroom-walk-in-shower.jpg
     - ../../assets/images/house/wood-fireplace-burning.jpg
@@ -125,9 +125,9 @@ Book the House and Villa together, connected as one retreat sleeping up to 8, wi
 
 ![Kitchen](../../assets/images/house/kitchen.jpg)
 
-![Queen bedroom with white linen](../../assets/images/house/king-bedroom-white-linen.jpeg)
+![Queen bedroom with white linen](../../assets/images/house/queen-bedroom-white-linen.jpeg)
 
-![Queen bedroom with teal cushions](../../assets/images/house/king-bedroom-teal-cushions.jpeg)
+![Queen bedroom with teal cushions](../../assets/images/house/queen-bedroom-teal-cushions.jpeg)
 
 ![Twin bedroom with exposed brick wall](../../assets/images/house/twin-bedroom-brick-wall.jpeg)
 
