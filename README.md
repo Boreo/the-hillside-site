@@ -27,7 +27,7 @@ src/
     review-sources.yaml  Review platform rating badges
   layouts/           Base.astro — nav, footer, JSON-LD
   lib/               Rehype plugins (photo runs, FAQ, policy pages), dwelling-facts wording, shared helpers
-  pages/             Routes: index.astro, [...slug].astro, book, gallery, reviews, 404
+  pages/             Routes: index.astro, [...slug].astro, book, gallery, reviews, 404, llms.txt
   styles/            global.css with brand palette tokens
   content.config.ts  Content schemas
 public/              Favicons, robots.txt, _redirects, _headers (asset caching, security headers, staging and dev noindex)
