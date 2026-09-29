@@ -40,7 +40,7 @@ const dwellingSchema = ({ image }: SchemaContext) =>
     schemaAmenities: z.array(z.string().min(1)).default([]),
     // Combined House & Villa bookings are direct-only, so that page points its
     // header CTA at the contact page instead of the booking engine.
-    cta: internalLinkSchema.default({ label: "Book Direct", href: "/book/" }),
+    cta: internalLinkSchema.default({ label: "Book with us", href: "/book/" }),
   });
 
 // Homepage-only content: section copy, image picks, captions and the

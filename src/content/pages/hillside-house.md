@@ -47,7 +47,7 @@ dwelling:
     - Bed linen, towels and toiletries supplied
     - Cot and extra bed on request
   cta:
-    label: Book Direct
+    label: Book with us
     href: /book/?room_rate=413447
 ---
 
