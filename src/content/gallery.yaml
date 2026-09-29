@@ -1,5 +1,5 @@
 # Gallery images, rendered in order on /gallery/. Every entry needs non-empty
-# alt text — the build fails otherwise. id = the image filename without extension.
+# alt text, or the build fails. id = the image filename.
 - id: aerial-view-whole-property.jpg
   src: ../assets/images/drone/aerial-view-whole-property.jpg
   alt: Aerial view of the house, pool and surrounding rainforest

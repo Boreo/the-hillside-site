@@ -763,8 +763,9 @@ blockquote footer {
   padding-inline: calc(50vw - 50%);
 }
 
-/* Anchors feeding the <dialog> photo viewer (LightboxViewer.astro);
-   rehype-photo-runs.mjs and CardGroups.astro emit them. */
+/* Photo triggers feeding the <dialog> viewer (LightboxViewer.astro).
+   rehype-photo-runs.mjs and PhotoBand emit buttons, the gallery and
+   CardGroups.astro emit anchors. */
 .lightbox-open {
   display: block;
   height: 100%;
@@ -802,12 +803,6 @@ button.lightbox-open {
     transform: translateZ(0) translateY(-4px);
     box-shadow: 0 10px 20px rgb(37 43 33 / 0.18);
   }
-}
-
-.hero-video {
-  width: 100%;
-  border-radius: 4px;
-  display: block;
 }
 
 /* Glass CTA button used on image-panel heroes (homepage and dwelling pages). */

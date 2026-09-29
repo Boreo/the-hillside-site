@@ -1,18 +1,11 @@
 ---
 import { Image } from "astro:assets";
 import FactsLine from "./FactsLine.astro";
+import type { CollectionEntry } from "astro:content";
 import { bookingEvent } from "../layouts/Base.astro";
 
 interface Props {
-  dwelling: {
-    name: string;
-    hero: { src: ImageMetadata; alt: string };
-    sleeps: number;
-    bedrooms: { bed: string; sleeps: number; ensuite: boolean }[];
-    bathrooms: number;
-    amenities: string[];
-    cta: { label: string; href: string };
-  };
+  dwelling: NonNullable<CollectionEntry<"pages">["data"]["dwelling"]>;
 }
 const { dwelling } = Astro.props;
 ---

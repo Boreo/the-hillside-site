@@ -30,7 +30,6 @@ const dwellingSchema = ({ image }: SchemaContext) =>
     bedrooms: z.array(
       z.object({
         bed: z.enum(["queen", "king", "double", "twin"]),
-        sleeps: z.number().int().positive().default(2),
         ensuite: z.boolean().default(false),
       }),
     ),
