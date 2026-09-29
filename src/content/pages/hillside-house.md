@@ -78,8 +78,8 @@ Tamborine Mountain's wineries, walking tracks and waterfalls are a few minutes' 
 - Spacious open plan lounge with 60” flat screen TV with Netflix.
 - Wood burning fireplace.
 - Master Bedroom with Queen Bed, Ensuite Shower Room, large walk-in wardrobe and TV.
-- Second Queen bedroom sleeps 2.
-- Twin bedroom sleeps 2.
+- Second Queen bedroom.
+- Twin bedroom.
 - All bedrooms with overhead fans and air-conditioning.
 - Family Bathroom with bath and separate shower.
 - Bed linen and towels supplied.
@@ -125,9 +125,9 @@ Book the House and Villa together, connected as one retreat sleeping up to 8, wi
 
 ![Kitchen](../../assets/images/house/kitchen.jpg)
 
-![King bedroom with white linen](../../assets/images/house/king-bedroom-white-linen.jpeg)
+![Queen bedroom with white linen](../../assets/images/house/king-bedroom-white-linen.jpeg)
 
-![King bedroom with teal cushions](../../assets/images/house/king-bedroom-teal-cushions.jpeg)
+![Queen bedroom with teal cushions](../../assets/images/house/king-bedroom-teal-cushions.jpeg)
 
 ![Twin bedroom with exposed brick wall](../../assets/images/house/twin-bedroom-brick-wall.jpeg)
 

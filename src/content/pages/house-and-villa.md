@@ -115,7 +115,7 @@ Our self-contained 1-bedroom Hillside Villa, with its own private entry, courtya
 
 ![Kitchen island with mountain views](../../assets/images/house/kitchen-island-mountain-view.jpg)
 
-![King bedroom with white linen](../../assets/images/house/king-bedroom-white-linen.jpeg)
+![Queen bedroom with white linen](../../assets/images/house/king-bedroom-white-linen.jpeg)
 
 ![Twin bedroom with exposed brick wall](../../assets/images/house/twin-bedroom-brick-wall.jpeg)
 
