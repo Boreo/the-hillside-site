@@ -11,15 +11,12 @@ interface Props {
 }
 const { image, line } = Astro.props;
 
-const sources = inFileOrder(await getCollection("reviewSources"), sourcesRaw).flatMap(({ data }) =>
-  data.rating !== null && data.count !== null
-    ? [{ platform: data.platform, scale: data.scale, rating: data.rating, count: data.count }]
-    : [],
+const sources = inFileOrder(await getCollection("reviewSources"), sourcesRaw).filter(
+  ({ data }) => data.rating !== null && data.count !== null,
 );
 const ratings = new Intl.ListFormat("en-AU").format(
-  sources.map((s) => `${s.rating}${s.scale === 10 ? " out of 10" : ""} on ${s.platform}`),
+  sources.map(({ data }) => `${data.rating} out of ${data.scale} on ${data.platform}`),
 );
-const reviewCount = sources.reduce((sum, s) => sum + s.count, 0);
 ---
 
 <section class="closing">
@@ -35,8 +32,8 @@ const reviewCount = sources.reduce((sum, s) => sum + s.count, 0);
   {
     sources.length > 0 && (
       <p class="closing-ratings">
-        Our guests have rated us {ratings}, across {reviewCount} reviews.{" "}
-        <a class="editorial-link" href="/reviews/">Read their reviews</a>
+        Our guests rate us {ratings}.
+        <a class="editorial-link" href="/reviews/">Read what guests say</a>
       </p>
     )
   }
@@ -64,7 +61,12 @@ const reviewCount = sources.reduce((sum, s) => sum + s.count, 0);
   .closing-ratings {
     font-size: 0.95rem;
     color: var(--muted);
-    max-width: 44ch;
+    text-wrap: balance;
     margin: 1.25rem auto 0;
+  }
+  .closing-ratings a {
+    display: block;
+    width: fit-content;
+    margin: 0.4rem auto 0;
   }
 </style>
